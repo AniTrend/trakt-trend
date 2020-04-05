@@ -1,0 +1,10 @@
+rootProject.name='TraktTrend'
+include ':app', ':core', ':data', ':domain',
+        ':support-data', ':support-domain', ':support-ext', ':support-core', ':support-ui', ':support-theme'
+
+project(':support-core').projectDir = new File('support-arch/support-core')
+project(':support-data').projectDir = new File('support-arch/support-data')
+project(':support-domain').projectDir = new File('support-arch/support-domain')
+project(':support-ext').projectDir = new File('support-arch/support-ext')
+project(':support-theme').projectDir = new File('support-arch/support-theme')
+project(':support-ui').projectDir = new File('support-arch/support-ui')
