@@ -3,7 +3,6 @@ package io.wax911.trakt.core.view
 import android.os.Build
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
-import co.anitrend.arch.core.presenter.SupportPresenter
 import co.anitrend.arch.extension.getCompatColor
 import co.anitrend.arch.ui.activity.SupportActivity
 import io.wax911.trakt.core.R
@@ -12,7 +11,7 @@ import io.wax911.trakt.core.R
 /**
  * Customizable activity for the application
  */
-abstract class TraktTrendActivity<M, P : SupportPresenter<*>> : SupportActivity<M, P>() {
+abstract class TraktTrendActivity : SupportActivity() {
 
     /**
      * Can be used to configure custom theme styling as desired

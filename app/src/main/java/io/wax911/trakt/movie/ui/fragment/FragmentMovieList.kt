@@ -3,56 +3,60 @@ package io.wax911.trakt.movie.ui.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import androidx.paging.PagedList
+import androidx.lifecycle.whenResumed
+import co.anitrend.arch.extension.LAZY_MODE_UNSAFE
 import co.anitrend.arch.extension.argument
-import co.anitrend.arch.ui.fragment.SupportFragmentPagedList
+import co.anitrend.arch.ui.fragment.paged.SupportFragmentPagedList
 import co.anitrend.arch.ui.recycler.holder.event.ItemClickListener
-import co.anitrend.arch.ui.util.SupportStateLayoutConfiguration
+import co.anitrend.arch.ui.util.StateLayoutConfig
 import io.wax911.trakt.R
-import io.wax911.trakt.movie.ui.adapter.recycler.MovieAdapter
-import io.wax911.trakt.core.presenter.CorePresenter
-import io.wax911.trakt.data.entitiy.movie.MovieEntity
-import io.wax911.trakt.domain.usecases.movie.TraktMovieUseCase
+import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
+import io.wax911.trakt.domain.models.MediaPayload
 import io.wax911.trakt.movie.viewmodel.MovieViewModel
+import io.wax911.trakt.shared.MediaAdapter
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FragmentMovieList: SupportFragmentPagedList<MovieEntity, CorePresenter, PagedList<MovieEntity>>() {
+class FragmentMovieList(
+    override val columnSize: Int = R.integer.grid_list_x3
+) : SupportFragmentPagedList<ISharedMediaWithImage>() {
 
     private val pagingMediaPayload
-            by argument<TraktMovieUseCase.Payload>(PARAM_MOVIE_TYPE)
+            by argument<MediaPayload>(PARAM_MOVIE_TYPE)
 
-    override val supportStateConfiguration = SupportStateLayoutConfiguration(
-        R.drawable.ic_support_empty_state,
-        R.drawable.ic_support_empty_state,
-        R.string.supportTextLoading, R.string.action_retry
-    )
+    override val stateConfig by inject<StateLayoutConfig>()
 
-    override val supportPresenter by inject<CorePresenter>()
-    override val supportViewModel by viewModel<MovieViewModel>()
+    private val viewModel by viewModel<MovieViewModel>()
 
-    override val supportViewAdapter =
-        MovieAdapter(object : ItemClickListener<MovieEntity> {
+    override val supportViewAdapter by lazy(LAZY_MODE_UNSAFE) {
+        MediaAdapter(
+            object : ItemClickListener<ISharedMediaWithImage> {
+                override fun onItemClick(target: View, data: Pair<Int, ISharedMediaWithImage?>) {
 
-            override fun onItemClick(target: View, data: Pair<Int, MovieEntity?>) {
+                }
 
-            }
+                override fun onItemLongClick(target: View, data: Pair<Int, ISharedMediaWithImage?>) {
 
-            override fun onItemLongClick(target: View, data: Pair<Int, MovieEntity?>) {
-
-            }
-        }, supportStateConfiguration)
-
-    override val columnSize: Int = R.integer.single_list_size
+                }
+            },
+            stateConfig
+        )
+    }
 
     /**
      * Invoke view model observer to watch for changes
      */
     override fun setUpViewModelObserver() {
-        supportViewModel.model.observe(this, Observer {
+        viewModel.modelState.model.observe(this, Observer {
             onPostModelChange(it)
         })
     }
+
+    /**
+     * Proxy for a view model state if one exists
+     */
+    override fun viewModelState() = viewModel.modelState
 
     /**
      * Additional initialization to be done in this method, if the overriding class is type of [SupportFragmentPagedList]
@@ -63,7 +67,11 @@ class FragmentMovieList: SupportFragmentPagedList<MovieEntity, CorePresenter, Pa
      * @param
      */
     override fun initializeComponents(savedInstanceState: Bundle?) {
-
+        launch {
+            viewLifecycleOwner.whenResumed {
+                onFetchDataInitialize()
+            }
+        }
     }
 
     /**
@@ -75,8 +83,8 @@ class FragmentMovieList: SupportFragmentPagedList<MovieEntity, CorePresenter, Pa
 
     override fun onFetchDataInitialize() {
         pagingMediaPayload?.also {
-            supportViewModel(
-                parameter = it
+            viewModel.modelState(
+                payload = it
             )
         }
     }

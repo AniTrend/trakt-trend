@@ -1,11 +1,26 @@
 package io.wax911.trakt.show.viewmodel
 
-import androidx.paging.PagedList
-import co.anitrend.arch.core.viewmodel.SupportPagingViewModel
-import io.wax911.trakt.data.entitiy.show.ShowEntity
-import io.wax911.trakt.data.usecase.show.ShowPagedListUseCase
-import io.wax911.trakt.domain.usecases.show.TraktShowUseCase
+import androidx.lifecycle.ViewModel
+import io.wax911.trakt.data.show.usecase.SeriesUseCaseType
+import io.wax911.trakt.show.viewmodel.model.ShowModelState
 
 class ShowViewModel(
-    override val useCase: ShowPagedListUseCase
-) : SupportPagingViewModel<TraktShowUseCase.Payload, PagedList<ShowEntity>>()
+    useCase: SeriesUseCaseType
+) : ViewModel() {
+
+    val modelState by lazy {
+        ShowModelState(useCase)
+    }
+
+    /**
+     * This method will be called when this ViewModel is no longer used and will be destroyed.
+     *
+     *
+     * It is useful when ViewModel observes some data and you need to clear this subscription to
+     * prevent a leak of this ViewModel.
+     */
+    override fun onCleared() {
+        modelState.onCleared()
+        super.onCleared()
+    }
+}

@@ -1,18 +1,16 @@
 package io.wax911.trakt.core.settings
 
 import android.content.Context
-import co.anitrend.arch.extension.preference.BooleanPreference
-import co.anitrend.arch.extension.preference.IntPreference
-import co.anitrend.arch.extension.preference.LongPreference
-import co.anitrend.arch.extension.preference.SupportPreference
+import co.anitrend.arch.extension.preference.*
 import io.wax911.trakt.core.R
-import io.wax911.trakt.data.settings.IAuthSettings
+import io.wax911.trakt.data.authentication.settings.IAuthenticationSettings
 
-class Settings(context: Context) : SupportPreference(context), IAuthSettings {
+class Settings(context: Context) : SupportSettings(context),
+    IAuthenticationSettings {
 
     override var authenticatedUserId by LongPreference(
         R.string.setting_authenticated_user_id,
-        IAuthSettings.INVALID_USER_ID,
+        IAuthenticationSettings.INVALID_USER_ID,
         context.resources
     )
 
@@ -30,7 +28,7 @@ class Settings(context: Context) : SupportPreference(context), IAuthSettings {
 
     companion object {
         val BINDINGS = arrayOf(
-            Settings::class, SupportPreference::class, IAuthSettings::class
+            Settings::class, SupportSettings::class, IAuthenticationSettings::class
         )
     }
 }

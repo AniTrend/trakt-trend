@@ -3,94 +3,91 @@ package io.wax911.trakt.show.ui.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import androidx.paging.PagedList
-import co.anitrend.arch.core.viewmodel.SupportViewModel
+import androidx.lifecycle.whenResumed
+import co.anitrend.arch.domain.entities.NetworkState
+import co.anitrend.arch.extension.LAZY_MODE_UNSAFE
 import co.anitrend.arch.extension.argument
-import co.anitrend.arch.ui.fragment.SupportFragmentPagedList
+import co.anitrend.arch.ui.fragment.paged.SupportFragmentPagedList
 import co.anitrend.arch.ui.recycler.holder.event.ItemClickListener
-import co.anitrend.arch.ui.util.SupportStateLayoutConfiguration
+import co.anitrend.arch.ui.util.StateLayoutConfig
 import io.wax911.trakt.R
-import io.wax911.trakt.show.ui.adapter.recycler.ShowAdapter
-import io.wax911.trakt.core.presenter.CorePresenter
+import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
+import io.wax911.trakt.domain.models.MediaPayload
+import io.wax911.trakt.shared.MediaAdapter
 import io.wax911.trakt.show.viewmodel.ShowViewModel
-import io.wax911.trakt.data.entitiy.show.ShowEntity
-import io.wax911.trakt.domain.usecases.show.TraktShowUseCase
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FragmentShowList : SupportFragmentPagedList<ShowEntity, CorePresenter, PagedList<ShowEntity>>() {
+class FragmentShowList(
+    override val columnSize: Int = R.integer.grid_list_x3
+) : SupportFragmentPagedList<ISharedMediaWithImage>() {
 
     private val pagingMediaPayload
-            by argument<TraktShowUseCase.Payload>(PARAM_SHOW_TYPE)
+            by argument<MediaPayload>(PARAM_SHOW_TYPE)
 
     // we could inject this as a singleton through DI
-    override val supportStateConfiguration = SupportStateLayoutConfiguration(
-        R.drawable.ic_support_empty_state,
-        R.drawable.ic_support_empty_state,
-        R.string.supportTextLoading, R.string.action_retry
-    )
+    override val stateConfig by inject<StateLayoutConfig>()
 
-    override val supportPresenter by inject<CorePresenter>()
-    override val supportViewModel by viewModel<ShowViewModel>()
+    private val viewModel by viewModel<ShowViewModel>()
 
-    override val supportViewAdapter =
-        ShowAdapter(
-            object : ItemClickListener<ShowEntity> {
-                override fun onItemClick(target: View, data: Pair<Int, ShowEntity?>) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override val supportViewAdapter by lazy(LAZY_MODE_UNSAFE) {
+        MediaAdapter(
+            object : ItemClickListener<ISharedMediaWithImage> {
+                override fun onItemClick(target: View, data: Pair<Int, ISharedMediaWithImage?>) {
+
                 }
 
-                override fun onItemLongClick(target: View, data: Pair<Int, ShowEntity?>) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-            }, supportStateConfiguration)
+                override fun onItemLongClick(target: View, data: Pair<Int, ISharedMediaWithImage?>) {
 
-    override val columnSize: Int = R.integer.single_list_size
+                }
+            },
+            stateConfig
+        )
+    }
 
     /**
      * Invoke view model observer to watch for changes
      */
     override fun setUpViewModelObserver() {
-        supportViewModel.model.observe(this, Observer {
+        viewModel.modelState.model.observe(this, Observer {
             onPostModelChange(it)
         })
     }
 
     /**
-     * Additional initialization to be done in this method, if the overriding class is type of [SupportFragmentPagedList]
-     * then this method will be called in [SupportFragmentPagedList.onCreate].
-     * invokes this function
+     * Proxy for a view model state if one exists
+     */
+    override fun viewModelState() = viewModel.modelState
+
+    /**
+     * Additional initialization to be done in this method, this method will be called in
+     * [androidx.fragment.app.FragmentActivity.onCreate].
      *
-     * @see [SupportFragmentPagedList.onCreate]
-     * @param
+     * @param savedInstanceState
      */
     override fun initializeComponents(savedInstanceState: Bundle?) {
-
+        launch {
+            viewLifecycleOwner.whenResumed {
+                onFetchDataInitialize()
+            }
+        }
     }
 
     /**
-     * Handles the updating of views, binding, creation or state change, depending on the context
-     * [androidx.lifecycle.LiveData] for a given [CompatView] will be available by this point.
+     * Handles the updating, binding, creation or state change, depending on the context of views.
      *
-     * Check implementation for more details
+     * **N.B.** Where this is called is up to the developer
      */
     override fun onUpdateUserInterface() {
 
     }
 
-    /**
-     * Handles the complex logic required to dispatch network request to [SupportViewModel]
-     * which uses [SupportRepository] to either request from the network or database cache.
-     *
-     * The results of the dispatched network or cache call will be published by the
-     * [androidx.lifecycle.LiveData] inside of your [SupportRepository]
-     *
-     * @see [SupportRepository.publishResult]
-     */
+
     override fun onFetchDataInitialize() {
         pagingMediaPayload?.also {
-            supportViewModel(
-                parameter = it
+            viewModel.modelState(
+                payload = it
             )
         }
     }

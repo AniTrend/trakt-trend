@@ -8,25 +8,24 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import co.anitrend.arch.ui.activity.SupportActivity
+import co.anitrend.arch.ui.common.ISupportActionUp
 import co.anitrend.arch.ui.fragment.SupportFragment
-import co.anitrend.arch.ui.util.SupportUiKeyStore
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import io.wax911.trakt.R
-import io.wax911.trakt.core.presenter.CorePresenter
 import io.wax911.trakt.core.view.TraktTrendActivity
-import io.wax911.trakt.domain.usecases.movie.MovieRequestType
-import io.wax911.trakt.domain.usecases.movie.TraktMovieUseCase
-import io.wax911.trakt.domain.usecases.show.ShowRequestType
-import io.wax911.trakt.domain.usecases.show.TraktShowUseCase
+import io.wax911.trakt.domain.models.MediaPayload
+import io.wax911.trakt.domain.usecases.MediaRequestType
 import io.wax911.trakt.movie.ui.fragment.FragmentMovieList
 import io.wax911.trakt.show.ui.fragment.FragmentShowList
 import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.android.ext.android.inject
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
-class MainScreen : TraktTrendActivity<Nothing, CorePresenter>(), NavigationView.OnNavigationItemSelectedListener {
+class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val bottomDrawerBehavior: BottomSheetBehavior<FrameLayout>?
         get() = BottomSheetBehavior.from(bottomNavigationDrawer)
@@ -37,22 +36,11 @@ class MainScreen : TraktTrendActivity<Nothing, CorePresenter>(), NavigationView.
     @StringRes
     private var selectedTitle: Int = R.string.nav_popular_series
 
-    /**
-     * Should be created lazily through injection or lazy delegate
-     *
-     * @return supportPresenter of the generic type specified
-     */
-    override val supportPresenter: CorePresenter by inject()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(bottomAppBar)
         bottomDrawerBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
-        if (intent.hasExtra(SupportUiKeyStore.arg_redirect))
-            selectedItem = intent.getIntExtra(SupportUiKeyStore.arg_redirect,
-                R.id.nav_popular_series
-            )
     }
 
     /**
@@ -73,22 +61,24 @@ class MainScreen : TraktTrendActivity<Nothing, CorePresenter>(), NavigationView.
             Toast.makeText(this, "Fab Clicked", Toast.LENGTH_SHORT).show()
         }
         bottomNavigationView.apply {
-            setNavigationItemSelectedListener(this@MainScreen)
+            launch {
+                setNavigationItemSelectedListener(this@MainScreen)
+            }
             setCheckedItem(selectedItem)
         }
         onUpdateUserInterface()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(SupportUiKeyStore.key_navigation_selected, selectedItem)
-        outState.putInt(SupportUiKeyStore.key_navigation_title, selectedTitle)
+        outState.putInt(key_navigation_selected, selectedItem)
+        outState.putInt(key_navigation_title, selectedTitle)
         super.onSaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        selectedItem = savedInstanceState.getInt(SupportUiKeyStore.key_navigation_selected)
-        selectedTitle = savedInstanceState.getInt(SupportUiKeyStore.key_navigation_title)
+        selectedItem = savedInstanceState.getInt(key_navigation_selected)
+        selectedTitle = savedInstanceState.getInt(key_navigation_title)
     }
 
     override fun onBackPressed() {
@@ -121,15 +111,18 @@ class MainScreen : TraktTrendActivity<Nothing, CorePresenter>(), NavigationView.
         if (selectedItem != item.itemId) {
             if (item.groupId != R.id.nav_group_customization) {
                 selectedItem = item.itemId
-                onNavigate(selectedItem)
-            } else
+                launch {
+                    onNavigate(selectedItem)
+                }
+            } else launch{
                 onNavigate(item.itemId)
+            }
         }
         return true
     }
 
-    private fun onNavigate(@IdRes menu: Int) {
-        var supportFragment: SupportFragment<*, *, *>? = null
+    private suspend fun onNavigate(@IdRes menu: Int) {
+        var actionUpFragment: ISupportActionUp? = null
         when (menu) {
             R.id.nav_theme -> {
                 when (AppCompatDelegate.getDefaultNightMode()) {
@@ -144,12 +137,12 @@ class MainScreen : TraktTrendActivity<Nothing, CorePresenter>(), NavigationView.
             R.id.nav_contact -> Toast.makeText(this@MainScreen, "Contact", Toast.LENGTH_SHORT).show()
             R.id.nav_popular_series -> {
                 selectedTitle = R.string.nav_popular_series
-                supportFragment = FragmentShowList.newInstance(
+                actionUpFragment = FragmentShowList.newInstance(
                     Bundle().also {
                         it.putParcelable(
                             FragmentShowList.PARAM_SHOW_TYPE,
-                            TraktShowUseCase.Payload(
-                                ShowRequestType.ShowPopular
+                            MediaPayload(
+                                MediaRequestType.POPULAR
                             )
                         )
                     }
@@ -157,12 +150,12 @@ class MainScreen : TraktTrendActivity<Nothing, CorePresenter>(), NavigationView.
             }
             R.id.nav_popular_movies -> {
                 selectedTitle = R.string.nav_popular_movies
-                supportFragment = FragmentMovieList.newInstance(
+                actionUpFragment = FragmentMovieList.newInstance(
                     Bundle().also {
                         it.putParcelable(
                             FragmentMovieList.PARAM_MOVIE_TYPE,
-                            TraktMovieUseCase.Payload(
-                                MovieRequestType.MoviePopular
+                            MediaPayload(
+                                MediaRequestType.POPULAR
                             )
                         )
                     }
@@ -173,22 +166,33 @@ class MainScreen : TraktTrendActivity<Nothing, CorePresenter>(), NavigationView.
         bottomAppBar.setTitle(selectedTitle)
         bottomDrawerBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
 
-        supportFragment?.apply {
-            supportFragmentActivity = this@apply
-            supportFragmentManager.commit {
-                replace(R.id.contentFrame, this@apply, tag)
+        try {
+            actionUpFragment?.apply {
+                this as Fragment
+                supportFragmentManager.commit {
+                    replace(R.id.contentFrame, this@apply, tag)
+                }
             }
+        } catch (e: Exception) {
+            Timber.tag(moduleTag).e(e)
         }
     }
 
     override fun onUpdateUserInterface() {
-        if (selectedItem != 0)
+        if (selectedItem != 0) launch {
             onNavigate(selectedItem)
-        else
+        }
+        else launch {
             onNavigate(R.id.nav_popular_series)
+        }
     }
 
     override fun onFetchDataInitialize() {
 
+    }
+
+    companion object {
+        private const val key_navigation_selected = "key_navigation_selected"
+        private const val key_navigation_title = "key_navigation_title"
     }
 }

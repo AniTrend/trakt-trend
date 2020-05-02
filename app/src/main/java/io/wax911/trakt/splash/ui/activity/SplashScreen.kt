@@ -14,16 +14,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 
-class SplashScreen : TraktTrendActivity<Nothing, CorePresenter>() {
+class SplashScreen : TraktTrendActivity() {
 
     private val supportDateHelper by inject<SupportDateHelper>()
-
-    /**
-     * Should be created lazily through injection or lazy delegate
-     *
-     * @return supportPresenter of the generic type specified
-     */
-    override val supportPresenter: CorePresenter by inject()
 
     /**
      * Additional initialization to be done in this method, if the overriding class is type of

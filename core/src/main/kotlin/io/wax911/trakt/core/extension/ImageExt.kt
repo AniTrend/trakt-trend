@@ -1,26 +1,27 @@
 package io.wax911.trakt.core.extension
 
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.databinding.BindingAdapter
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
-import io.wax911.trakt.core.util.ThumbnailHelper
-import io.wax911.trakt.domain.entities.contract.TraktEntity
+import coil.Coil
+import coil.annotation.ExperimentalCoilApi
+import coil.api.load
+import coil.request.LoadRequest
+import coil.request.RequestDisposable
+import coil.transition.CrossfadeTransition
+import io.wax911.trakt.domain.entities.image.contract.IShowImage
 
-@BindingAdapter("imageUrl")
-fun AppCompatImageView.setImageUrl(url: String?) = url?.also {
-    Glide.with(context).load(url)
-        .transition(DrawableTransitionOptions.withCrossFade(350))
-        .apply(RequestOptions.centerCropTransform())
-        .into(this)
+fun AppCompatImageView.setImageUrl(url: String?) = url?.let {
+    load(url) {
+        crossfade(350)
+    }
 }
 
-@BindingAdapter("youtubeTrailer")
-fun AppCompatImageView.setImageUrl(entity: TraktEntity) {
-    val url = ThumbnailHelper.getThumbnailFromUrl(entity.trailer)
-    Glide.with(context).load(url)
-        .transition(DrawableTransitionOptions.withCrossFade(350))
-        .apply(RequestOptions.centerCropTransform())
-        .into(this)
+@OptIn(ExperimentalCoilApi::class)
+fun AppCompatImageView.using(entity: IShowImage): RequestDisposable? {
+    val requestBuilder = LoadRequest.Builder(context)
+
+    val request = requestBuilder
+        .transition(CrossfadeTransition(350))
+        .data(entity).target(this).build()
+
+    return Coil.imageLoader(context).execute(request)
 }

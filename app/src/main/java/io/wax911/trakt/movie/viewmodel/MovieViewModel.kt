@@ -1,11 +1,26 @@
 package io.wax911.trakt.movie.viewmodel
 
-import androidx.paging.PagedList
-import co.anitrend.arch.core.viewmodel.SupportPagingViewModel
-import io.wax911.trakt.data.entitiy.movie.MovieEntity
-import io.wax911.trakt.data.usecase.movie.MoviePagedListUseCase
-import io.wax911.trakt.domain.usecases.movie.TraktMovieUseCase
+import androidx.lifecycle.ViewModel
+import io.wax911.trakt.data.movie.usecase.FilmUseCaseType
+import io.wax911.trakt.movie.viewmodel.model.MovieModelState
 
 class MovieViewModel(
-    override val useCase: MoviePagedListUseCase
-) : SupportPagingViewModel<TraktMovieUseCase.Payload, PagedList<MovieEntity>>()
+    useCase: FilmUseCaseType
+) : ViewModel() {
+
+    val modelState by lazy {
+        MovieModelState(useCase)
+    }
+
+    /**
+     * This method will be called when this ViewModel is no longer used and will be destroyed.
+     *
+     *
+     * It is useful when ViewModel observes some data and you need to clear this subscription to
+     * prevent a leak of this ViewModel.
+     */
+    override fun onCleared() {
+        modelState.onCleared()
+        super.onCleared()
+    }
+}

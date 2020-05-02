@@ -17,9 +17,6 @@ android {
         applicationId "io.wax911.trakt"
         vectorDrawables.useSupportLibrary = true
     }
-    dataBinding {
-        enabled = true
-    }
     viewBinding {
         enabled = true
     }
@@ -68,6 +65,9 @@ dependencies {
     implementation("com.afollestad.material-dialogs:input:$materialDialogs")
     implementation("com.afollestad.material-dialogs:lifecycle:$materialDialogs")
     implementation("com.afollestad.material-dialogs:bottomsheets:$materialDialogs")
+
+    /** Coil libraries */
+    implementation("io.coil-kt:coil:$coil")
 
     /** Flex Box */
     implementation("com.google.android:flexbox:$flexBox")
