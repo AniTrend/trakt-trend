@@ -61,7 +61,9 @@ internal class OfflineControllerPolicy<D> private constructor() : ControllerStra
     ): D? {
         return runCatching{
             networkState.postValue(NetworkState.Loading)
-            block()
+            val result = block()
+            networkState.postValue(NetworkState.Success)
+            result
         }.getOrElse {
             it.printStackTrace()
             networkState.postValue(

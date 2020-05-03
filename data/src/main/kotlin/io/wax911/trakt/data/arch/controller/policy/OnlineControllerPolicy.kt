@@ -54,7 +54,9 @@ internal class OnlineControllerPolicy<D> private constructor(
         if (connectivity.isConnected) {
             return runCatching{
                 networkState.postValue(NetworkState.Loading)
-                block()
+                val result = block()
+                networkState.postValue(NetworkState.Success)
+                result
             }.getOrElse {
                 Timber.tag(moduleTag).e(it)
                 networkState.postValue(
