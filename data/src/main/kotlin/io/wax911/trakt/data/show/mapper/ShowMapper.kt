@@ -1,6 +1,5 @@
 package io.wax911.trakt.data.show.mapper
 
-import com.uwetrottmann.tmdb2.Tmdb
 import com.uwetrottmann.trakt5.entities.Show
 import io.wax911.trakt.data.arch.mapper.TraktTrendMapper
 import io.wax911.trakt.data.show.datasource.local.ShowDao
@@ -8,8 +7,7 @@ import io.wax911.trakt.data.show.datasource.local.transformer.ShowTransformer
 import io.wax911.trakt.data.show.entity.ShowEntity
 
 internal class ShowMapper(
-    private val localSource: ShowDao,
-    private val searchForImages: suspend (Int?) -> Unit
+    private val localSource: ShowDao
 ) : TraktTrendMapper<List<Show>, List<ShowEntity>>() {
 
     /**
@@ -21,7 +19,6 @@ internal class ShowMapper(
      */
     override suspend fun onResponseMapFrom(source: List<Show>): List<ShowEntity> {
         return source.map {
-            searchForImages(it.ids?.tmdb)
             ShowTransformer.transform(it)
         }
     }

@@ -6,7 +6,7 @@ import io.wax911.trakt.data.arch.database.extensions.fromEnum
 import io.wax911.trakt.data.arch.database.extensions.toCommaSeparatedValues
 import io.wax911.trakt.data.arch.database.extensions.toEnum
 import io.wax911.trakt.data.tmdb.enums.TmdbImageType
-import io.wax911.trakt.data.show.enums.ShowType
+import io.wax911.trakt.domain.models.MediaType
 
 internal object TraktTrendTypeConverters {
 
@@ -20,11 +20,11 @@ internal object TraktTrendTypeConverters {
 
     @TypeConverter
     @JvmStatic
-    fun fromShowType(source: ShowType) = source.fromEnum()
+    fun fromShowType(source: MediaType) = source.fromEnum()
 
     @TypeConverter
     @JvmStatic
-    fun toShowType(source: String)= source.toEnum<ShowType>()
+    fun toShowType(source: String)= source.toEnum<MediaType>()
 
     @TypeConverter
     @JvmStatic

@@ -15,7 +15,7 @@ internal abstract class MoviePagedSource(
 ) : TraktPagedSource<ISharedMediaWithImage>(dispatchers) {
     protected abstract val popularObservable: ISourceObservable<Nothing?, PagedList<ISharedMediaWithImage>>
 
-    protected abstract fun getPopularMovies(callback: PagingRequestHelper.Request.Callback)
+    protected abstract suspend fun getPopularMovies(callback: PagingRequestHelper.Request.Callback)
 
     operator fun invoke() : LiveData<PagedList<ISharedMediaWithImage>> {
         executionTarget = { getPopularMovies(it) }

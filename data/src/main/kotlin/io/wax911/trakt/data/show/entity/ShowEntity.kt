@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import co.anitrend.arch.data.mapper.contract.ISupportMapperHelper
 import io.wax911.trakt.data.show.entity.contract.IShowEntity
 import io.wax911.trakt.data.show.entity.trending.ITrendingEntity
-import io.wax911.trakt.data.show.enums.ShowType
+import io.wax911.trakt.domain.models.MediaType
 import io.wax911.trakt.domain.entities.show.ShowItem
 import io.wax911.trakt.domain.entities.contract.IEntity
 import io.wax911.trakt.domain.entities.show.contract.ISharedMedia
@@ -35,7 +35,7 @@ internal data class ShowEntity(
     override val id: Int = 0,
     override val traktId: Int?,
     override val tmdbId: Int?,
-    override val showType: ShowType,
+    override val showType: MediaType,
     override val watchers: Int? = null
 ): IShowEntity, ITrendingEntity {
 

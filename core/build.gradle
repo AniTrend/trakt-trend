@@ -11,6 +11,7 @@ dependencies {
 
     /** Platform Dependencies */
     implementation project(":support-domain")
+    implementation project(":support-data")
     implementation project(":support-core")
     implementation project(":support-ext")
     implementation project(":support-ui")

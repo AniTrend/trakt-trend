@@ -4,7 +4,7 @@ import co.anitrend.arch.data.mapper.contract.ISupportMapperHelper
 import com.uwetrottmann.trakt5.entities.Airs
 import com.uwetrottmann.trakt5.entities.Show
 import io.wax911.trakt.data.show.entity.ShowEntity
-import io.wax911.trakt.data.show.enums.ShowType
+import io.wax911.trakt.domain.models.MediaType
 
 internal object ShowTransformer : ISupportMapperHelper<Show, ShowEntity> {
 
@@ -41,7 +41,7 @@ internal object ShowTransformer : ISupportMapperHelper<Show, ShowEntity> {
             genres = source.genres.orEmpty(),
             traktId = source.ids?.trakt,
             tmdbId = source.ids?.tmdb,
-            showType = ShowType.SERIES
+            showType = MediaType.SERIES
         )
     }
 }

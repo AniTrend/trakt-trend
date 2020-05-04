@@ -8,6 +8,7 @@ import coil.request.LoadRequest
 import coil.request.RequestDisposable
 import coil.transition.CrossfadeTransition
 import io.wax911.trakt.domain.entities.image.contract.IShowImage
+import io.wax911.trakt.domain.entities.image.contract.ITmdbImage
 
 fun AppCompatImageView.setImageUrl(url: String?) = url?.let {
     load(url) {
@@ -16,7 +17,7 @@ fun AppCompatImageView.setImageUrl(url: String?) = url?.let {
 }
 
 @OptIn(ExperimentalCoilApi::class)
-fun AppCompatImageView.using(entity: IShowImage): RequestDisposable? {
+fun AppCompatImageView.using(entity: ITmdbImage): RequestDisposable? {
     val requestBuilder = LoadRequest.Builder(context)
 
     val request = requestBuilder

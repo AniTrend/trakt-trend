@@ -12,39 +12,30 @@ import co.anitrend.arch.extension.network.SupportConnectivity
 import com.uwetrottmann.trakt5.enums.Extended
 import com.uwetrottmann.trakt5.services.Shows
 import io.wax911.trakt.data.arch.controller.policy.OnlineControllerPolicy
-import io.wax911.trakt.data.arch.controller.strategy.ControllerStrategy
 import io.wax911.trakt.data.arch.extensions.controller
 import io.wax911.trakt.data.show.datasource.local.ShowDao
 import io.wax911.trakt.data.show.entity.ShowEntity
-import io.wax911.trakt.data.show.enums.ShowType
+import io.wax911.trakt.domain.models.MediaType
 import io.wax911.trakt.data.show.mapper.ShowMapper
 import io.wax911.trakt.data.show.source.contract.ShowPagedSource
-import io.wax911.trakt.data.tmdb.repository.TmdbRepository
-import io.wax911.trakt.domain.entities.shared.ShowWithImages
+import io.wax911.trakt.domain.entities.image.TmdbImage
+import io.wax911.trakt.domain.entities.shared.ShowWithImage
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
-import kotlinx.coroutines.flow.single
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 internal class ShowPagedSourceImpl(
     private val localSource: ShowDao,
     private val remoteSource: Shows,
-    private val tmdbRepository: TmdbRepository,
+    private val mapper: ShowMapper,
     private val connectivity: SupportConnectivity,
     dispatchers: SupportDispatchers
 ) : ShowPagedSource(dispatchers) {
 
-    override fun getPopularShows(callback: PagingRequestHelper.Request.Callback) {
+    override suspend fun getPopularShows(callback: PagingRequestHelper.Request.Callback) {
         val call = remoteSource.popular(
             supportPagingHelper.page,
             supportPagingHelper.pageSize,
             Extended.FULL
         )
-
-        val mapper = ShowMapper(localSource) { tmdbId ->
-            if (tmdbId != null)
-                tmdbRepository.loadImages(tmdbId)
-        }
 
         val controller =
             mapper.controller(
@@ -54,9 +45,7 @@ internal class ShowPagedSourceImpl(
                 dispatchers
             )
 
-        launch {
-            controller(call, callback)
-        }
+        controller(call, callback)
     }
 
     override val popularObservable =
@@ -69,17 +58,17 @@ internal class ShowPagedSourceImpl(
              * @param parameter parameters, implementation is up to the developer
              */
             override operator fun invoke(parameter: Nothing?): LiveData<PagedList<ISharedMediaWithImage>> {
-                val dataSourceFactory = localSource.getPopular(ShowType.SERIES)
+                val dataSourceFactory = localSource.getPopular(MediaType.SERIES)
 
                 val result: DataSource.Factory<Int, ISharedMediaWithImage> = dataSourceFactory.map {
-                    val images = runBlocking(dispatchers.io) {
-                        tmdbRepository.getImagesFlow(it.tmdbId ?: 0).single()
-                    }
                     val show = ShowEntity.transform(it)
 
-                    ShowWithImages(
+                    ShowWithImage(
                         media = show,
-                        images = images
+                        image = TmdbImage(
+                            type = MediaType.SERIES,
+                            id = it.tmdbId ?: 0
+                        )
                     )
                 }
 
@@ -94,6 +83,6 @@ internal class ShowPagedSourceImpl(
      * Clears data sources (databases, preferences, e.t.c)
      */
     override suspend fun clearDataSource() {
-        localSource.deleteAll(ShowType.SERIES)
+        localSource.deleteAll(MediaType.SERIES)
     }
 }

@@ -12,23 +12,10 @@ import io.wax911.trakt.domain.entities.image.ShowImage
 import io.wax911.trakt.domain.entities.image.contract.IShowImage
 import io.wax911.trakt.domain.entities.image.enums.ShowImageType
 
-@Entity(
-    indices = [
-        Index(value = ["showId"])
-    ],
-    foreignKeys = [
-        ForeignKey(
-            entity = ShowEntity::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("showId"),
-            onUpdate = ForeignKey.CASCADE,
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
-)
+@Entity
 internal data class TmdbImageEntity(
-    @PrimaryKey(autoGenerate = true)
-    override val id: Int = 0,
+    @PrimaryKey
+    override val id: Int,
     val showId: Long,
     val path: String,
     val type: TmdbImageType,

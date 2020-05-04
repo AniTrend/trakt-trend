@@ -1,4 +1,4 @@
-package io.wax911.trakt.core.helpers.coil
+package io.wax911.trakt.core.helpers.coil.mapper
 
 import coil.map.MeasuredMapper
 import coil.size.PixelSize
@@ -9,8 +9,8 @@ import io.wax911.trakt.domain.entities.image.enums.ShowImageType
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 
-class ShowTypeRegistry(
-    private val imageProvider: TmdbImageUrlProvider
+class ShowImageMeasuredMapper(
+    private val imageProvider: TmdbImageUrlProvider = TmdbImageUrlProvider()
 ) : MeasuredMapper<IShowImage, HttpUrl> {
 
     override fun handles(data: IShowImage): Boolean = true

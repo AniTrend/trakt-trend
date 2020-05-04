@@ -27,7 +27,7 @@ class MediaAdapter(
      * then this function should return [androidx.recyclerview.widget.RecyclerView.NO_ID]
      */
     override fun getStableIdFor(item: ISharedMediaWithImage?): Long {
-        return item?.id?.toLong() ?: RecyclerView.NO_ID
+        return item?.media?.id?.toLong() ?: RecyclerView.NO_ID
     }
 
     /**
@@ -71,9 +71,7 @@ class MediaAdapter(
          */
         override fun invoke(model: ISharedMediaWithImage?) {
             media = model?.apply {
-                val poster = ImageConfig(images).bestPostImage()
-                if (poster != null)
-                    disposible = binding.showImage.using(poster)
+                disposible = binding.showImage.using(image)
                 binding.showTitle.text = media.title
             }
         }
@@ -90,6 +88,7 @@ class MediaAdapter(
                 if (!isDisposed)
                     dispose()
             }
+            disposible = null
         }
 
         override fun onItemClick(

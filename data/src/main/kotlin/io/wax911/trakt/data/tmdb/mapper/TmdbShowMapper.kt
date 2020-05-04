@@ -7,7 +7,7 @@ import io.wax911.trakt.data.tmdb.datasource.local.TmdbDao
 import io.wax911.trakt.data.tmdb.entity.TmdbImageEntity
 import io.wax911.trakt.data.tmdb.enums.TmdbImageType
 
-internal class TmbdShowMapper(
+internal class TmdbShowMapper(
     private val localDao: TmdbDao
 ): TraktTrendMapper<TvShow, List<TmdbImageEntity>>() {
     /**
@@ -36,8 +36,12 @@ internal class TmbdShowMapper(
 
 
         val result = mutableListOf<TmdbImageEntity>()
-        source.images?.posters?.mapTo(result) { mapImage(it, TmdbImageType.POSTER) }
-        source.images?.backdrops?.mapTo(result) { mapImage(it, TmdbImageType.BACKDROP) }
+        source.images?.posters?.mapTo(result) {
+            mapImage(it, TmdbImageType.POSTER)
+        }
+        source.images?.backdrops?.mapTo(result) {
+            mapImage(it, TmdbImageType.BACKDROP)
+        }
         return result
     }
 

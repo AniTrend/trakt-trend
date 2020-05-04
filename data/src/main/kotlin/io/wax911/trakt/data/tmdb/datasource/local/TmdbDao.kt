@@ -22,10 +22,15 @@ internal abstract class TmdbDao: ISupportQuery<TmdbImageEntity> {
     @Query("""
         select * from TmdbImageEntity  where id = :tmdb
     """)
-    abstract fun getById(tmdb: Int): List<TmdbImageEntity>
+    abstract suspend fun getById(tmdb: Int): List<TmdbImageEntity>
 
     @Query("""
         delete from TmdbImageEntity where id = :tmdb
     """)
     abstract suspend fun deleteAll(tmdb: Int)
+
+    @Query("""
+        delete from TmdbImageEntity
+    """)
+    abstract suspend fun deleteAll()
 }

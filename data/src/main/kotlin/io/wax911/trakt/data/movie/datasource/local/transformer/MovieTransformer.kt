@@ -3,7 +3,7 @@ package io.wax911.trakt.data.movie.datasource.local.transformer
 import co.anitrend.arch.data.mapper.contract.ISupportMapperHelper
 import com.uwetrottmann.trakt5.entities.Movie
 import io.wax911.trakt.data.show.entity.ShowEntity
-import io.wax911.trakt.data.show.enums.ShowType
+import io.wax911.trakt.domain.models.MediaType
 
 internal object MovieTransformer : ISupportMapperHelper<Movie, ShowEntity> {
 
@@ -33,7 +33,7 @@ internal object MovieTransformer : ISupportMapperHelper<Movie, ShowEntity> {
             genres = source.genres.orEmpty(),
             traktId = source.ids?.trakt,
             tmdbId = source.ids?.tmdb,
-            showType = ShowType.MOVIE
+            showType = MediaType.MOVIE
         )
     }
 }

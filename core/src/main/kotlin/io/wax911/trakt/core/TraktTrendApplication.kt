@@ -5,11 +5,13 @@ import androidx.work.Configuration
 import co.anitrend.arch.core.analytic.contract.ISupportAnalytics
 import coil.Coil
 import coil.ImageLoader
-import coil.ImageLoaderBuilder
 import coil.ImageLoaderFactory
+import coil.map.MeasuredMapper
 import coil.util.CoilUtils
 import io.wax911.trakt.core.analytics.AnalyticsLogger
-import io.wax911.trakt.core.helpers.coil.ShowTypeRegistry
+import io.wax911.trakt.core.helpers.coil.fetch.ShowImageFetcher
+import io.wax911.trakt.domain.entities.image.contract.IShowImage
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
@@ -53,17 +55,13 @@ abstract class TraktTrendApplication : Application(), Configuration.Provider {
                     // ratio of memory
                     .bitmapPoolPercentage(0.5)
                     .okHttpClient {
-                        OkHttpClient.Builder()
-                            .cache(
-                                CoilUtils.createDefaultCache(applicationContext)
-                            ).build()
+                        get()
                     }
                     .componentRegistry {
-                        get<ShowTypeRegistry>()
+                        add(get<ShowImageFetcher>())
                     }.build()
             }
         })
-
     }
 
     /**

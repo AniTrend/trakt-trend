@@ -1,7 +1,7 @@
 package io.wax911.trakt.data.show.entity.contract
 
 import io.wax911.trakt.data.arch.common.ITraktId
-import io.wax911.trakt.data.show.enums.ShowType
+import io.wax911.trakt.domain.models.MediaType
 import io.wax911.trakt.data.tmdb.entity.contract.ITmdbId
 import io.wax911.trakt.domain.entities.contract.IEntity
 
@@ -23,5 +23,5 @@ internal interface IShowCoreEntity: IEntity, ITraktId, ITmdbId {
     val language: String?
     val genres: List<String>
 
-    val showType: ShowType
+    val showType: MediaType
 }

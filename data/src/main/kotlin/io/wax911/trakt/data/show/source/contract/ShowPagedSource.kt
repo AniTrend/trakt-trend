@@ -14,7 +14,7 @@ internal abstract class ShowPagedSource(
     protected abstract val popularObservable:
             ISourceObservable<Nothing?, PagedList<ISharedMediaWithImage>>
 
-    protected abstract fun getPopularShows(callback: PagingRequestHelper.Request.Callback)
+    protected abstract suspend fun getPopularShows(callback: PagingRequestHelper.Request.Callback)
 
     operator fun invoke() : LiveData<PagedList<ISharedMediaWithImage>> {
         executionTarget = { getPopularShows(it) }

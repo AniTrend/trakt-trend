@@ -8,7 +8,7 @@ import io.wax911.trakt.data.arch.extensions.fetchBodyWithRetry
 import io.wax911.trakt.data.tmdb.helper.TmdbImageUrlProvider
 import kotlinx.coroutines.flow.Flow
 
-internal class TmdbUseCaseManager(
+class TmdbUseCaseManager(
     private val source: ConfigurationService
 ) {
 

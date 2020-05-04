@@ -17,7 +17,8 @@
             android:id="@+id/showImage"
             android:layout_width="@dimen/series_image_sm"
             android:layout_height="0dp"
-            app:aspectRatio="1.5"
+            android:scaleType="centerCrop"
+            app:aspectRatio="1.67"
             tools:src="@sample/poster"
             tools:scaleType="centerCrop"/>
 

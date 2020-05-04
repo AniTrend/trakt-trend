@@ -4,6 +4,8 @@ import com.uwetrottmann.tmdb2.Tmdb
 import io.wax911.trakt.data.BuildConfig
 import io.wax911.trakt.data.arch.extensions.db
 import io.wax911.trakt.data.arch.extensions.tmdb
+import io.wax911.trakt.data.tmdb.mapper.TmdbShowMapper
+import io.wax911.trakt.data.tmdb.mapper.TmdbMovieMapper
 import io.wax911.trakt.data.tmdb.repository.TmdbRepository
 import io.wax911.trakt.data.tmdb.source.TmdbSourceImpl
 import io.wax911.trakt.data.tmdb.source.contract.TmdbSource
@@ -42,9 +44,25 @@ private val dataSourceModule = module {
     factory<TmdbSource> {
         TmdbSourceImpl(
             localSource = db().tmdbDao(),
-            remoteSource = tmdb().tvService(),
+            remoteTvSource = tmdb().tvService(),
+            remoteMovieSource = tmdb().moviesService(),
             connectivity = get(),
+            movieMapper = get(),
+            showMapper = get(),
             dispatchers = get()
+        )
+    }
+}
+
+private val mapperModule = module {
+    factory {
+        TmdbMovieMapper(
+            localDao = db().tmdbDao()
+        )
+    }
+    factory {
+        TmdbShowMapper(
+            localDao = db().tmdbDao()
         )
     }
 }
@@ -66,5 +84,5 @@ private val useCaseModule = module {
 }
 
 internal val tmdbModules = listOf(
-    networkModule, dataSourceModule, repositoryModule, useCaseModule
+    networkModule, mapperModule, dataSourceModule, repositoryModule, useCaseModule
 )

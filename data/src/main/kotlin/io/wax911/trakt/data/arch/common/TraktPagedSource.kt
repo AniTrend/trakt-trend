@@ -15,7 +15,7 @@ internal abstract class TraktPagedSource<T>(
     supportDispatchers: SupportDispatchers
 ) : SupportPagingDataSource<T>(supportDispatchers) {
 
-    protected lateinit var executionTarget: (PagingRequestHelper.Request.Callback) -> Unit
+    protected lateinit var executionTarget: suspend (PagingRequestHelper.Request.Callback) -> Unit
 
     /**
      * Called when zero items are returned from an initial load of the PagedList's data source.
@@ -24,7 +24,7 @@ internal abstract class TraktPagedSource<T>(
         pagingRequestHelper.runIfNotRunning(
             PagingRequestHelper.RequestType.INITIAL
         ) {
-            executionTarget(it)
+            launch { executionTarget(it) }
         }
     }
 
@@ -41,7 +41,7 @@ internal abstract class TraktPagedSource<T>(
             PagingRequestHelper.RequestType.AFTER
         ) {
             supportPagingHelper.onPageNext()
-            executionTarget(it)
+            launch { executionTarget(it) }
         }
     }
 }

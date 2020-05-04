@@ -7,8 +7,7 @@ import io.wax911.trakt.data.show.datasource.local.ShowDao
 import io.wax911.trakt.data.show.entity.ShowEntity
 
 internal class MovieMapper(
-    private val localSource: ShowDao,
-    private val searchForImages: suspend (Int?) -> Unit
+    private val localSource: ShowDao
 ) : TraktTrendMapper<List<Movie>, List<ShowEntity>>() {
 
     /**
@@ -20,7 +19,6 @@ internal class MovieMapper(
      */
     override suspend fun onResponseMapFrom(source: List<Movie>): List<ShowEntity> {
         return source.map {
-            searchForImages(it.ids?.tmdb)
             MovieTransformer.transform(it)
         }
     }
