@@ -22,6 +22,12 @@ android {
     }
 }
 
+ext {
+    leakCanary = '2.2'
+    debugDB = '1.0.6'
+    treessence = '0.3.2'
+}
+
 
 dependencies {
 
@@ -78,8 +84,15 @@ dependencies {
     /** Tap Target Prompt */
     implementation("uk.co.samuelwall:material-tap-target-prompt:$tapTarget")
 
+    /** Timber Trees */
+    implementation("fr.bipi.treessence:treessence:$treessence")
+
     /** Testing-only dependencies */
     testImplementation("org.koin:koin-test:$koin")
+
+    // debugImplementation because LeakCanary should only run in debug builds.
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanary")
+    debugImplementation("com.amitshekhar.android:debug-db:$debugDB")
 }
 
 if (file("google-services.json").exists()) {

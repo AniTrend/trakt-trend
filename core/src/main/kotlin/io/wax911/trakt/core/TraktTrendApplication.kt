@@ -34,7 +34,7 @@ abstract class TraktTrendApplication : Application(), Configuration.Provider {
     /**
      * Timber logging tree depending on the build type we plant the appropriate tree
      */
-    private fun plantLoggingTree() {
+    protected open fun plantLoggingTree() {
         when (BuildConfig.DEBUG) {
             true -> Timber.plant(Timber.DebugTree())
             else -> Timber.plant(analytics as AnalyticsLogger)

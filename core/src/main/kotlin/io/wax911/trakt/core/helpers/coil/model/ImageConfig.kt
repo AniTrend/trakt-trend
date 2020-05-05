@@ -7,6 +7,8 @@ import io.wax911.trakt.domain.entities.image.contract.IShowImage
 data class ImageConfig(
     val showImages: Collection<IShowImage>
 ) {
-    fun bestPostImage() = showImages.findHighestRatedPoster()
-    fun bestBackDropImage() = showImages.findHighestRatedBackdrop()
+    fun bestPostImage() =
+        showImages.findHighestRatedPoster() ?: showImages.firstOrNull()
+    fun bestBackDropImage() =
+        showImages.findHighestRatedBackdrop() ?: showImages.firstOrNull()
 }

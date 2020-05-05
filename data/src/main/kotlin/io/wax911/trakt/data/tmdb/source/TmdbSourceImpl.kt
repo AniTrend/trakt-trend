@@ -51,9 +51,8 @@ internal class TmdbSourceImpl(
             }
         }
 
-    @Throws(Exception::class)
-    override suspend fun findMatching(tmdb: ITmdbImage): List<IShowImage> {
-        return when (tmdb.type) {
+    override suspend fun findMatching(tmdb: ITmdbImage) {
+        when (tmdb.type) {
             MediaType.MOVIE -> findMovieMatching(tmdb.id)
             MediaType.SERIES -> findShowMatching(tmdb.id)
         }

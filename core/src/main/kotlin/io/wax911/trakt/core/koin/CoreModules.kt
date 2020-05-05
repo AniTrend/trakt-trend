@@ -2,7 +2,6 @@ package io.wax911.trakt.core.koin
 
 import co.anitrend.arch.core.analytic.contract.ISupportAnalytics
 import co.anitrend.arch.extension.SupportDispatchers
-import coil.ImageLoader
 import coil.map.MeasuredMapper
 import coil.util.CoilUtils
 import io.wax911.trakt.core.analytics.AnalyticsLogger
@@ -14,7 +13,6 @@ import io.wax911.trakt.data.arch.di.dataModules
 import io.wax911.trakt.domain.entities.image.contract.IShowImage
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
-import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.binds

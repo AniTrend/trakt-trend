@@ -24,6 +24,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.BufferedSource
+import timber.log.Timber
 
 class ShowImageFetcher(
     private val client: OkHttpClient,
@@ -31,10 +32,19 @@ class ShowImageFetcher(
     private val mapper: MeasuredMapper<IShowImage, HttpUrl>
 ) : Fetcher<ITmdbImage> {
 
-    private suspend fun fetchImagesFromSource(data: ITmdbImage, size: Size): HttpUrl {
-        val images= tmdbSource.get(data)
-        val poster = ImageConfig(images).bestPostImage()
-        return poster?.let { mapper.map(poster, size) } ?: FALLBACK_URL
+    private suspend fun fetchImagesFromSource(data: ITmdbImage, size: Size): HttpUrl? {
+        return runCatching {
+            val images= tmdbSource.get(data)
+            Timber.tag(moduleTag).v(
+                "Images retrieved from tmdb source for item: ${data.id} -> ${images.size}"
+            )
+            val poster = ImageConfig(images).bestPostImage()
+            Timber.tag(moduleTag).v("Best image selected: ${poster?.path}")
+            poster?.let { mapper.map(poster, size) }
+        }.getOrElse {
+            Timber.tag(moduleTag).e(it)
+            null
+        }
     }
 
     private suspend fun fetchDataSourceUsing(httpUrl: HttpUrl): BufferedSource {
@@ -64,7 +74,7 @@ class ShowImageFetcher(
         size: Size,
         options: Options
     ): FetchResult {
-        val url = fetchImagesFromSource(data, size)
+        val url = fetchImagesFromSource(data, size) ?: FALLBACK_URL
         val source = fetchDataSourceUsing(url)
         return SourceResult(
             source = source,
@@ -81,11 +91,17 @@ class ShowImageFetcher(
      * Returning null will prevent the result of [fetch] from being added to the memory cache.
      */
     override fun key(data: ITmdbImage): String? {
-        val hash = data.type.name.hashCode() + data.id
+        val hash = data.id
+        Timber.tag(moduleTag).v("Generated key for image: $hash")
         return hash.toString()
     }
 
     companion object {
-        private val FALLBACK_URL = "https://trakt.tv/assets/logos/header@2x-09f929ba67b0964596b359f497884cd9.png".toHttpUrl()
+
+        private val moduleTag = ShowImageFetcher::class.java.simpleName
+
+        private val FALLBACK_URL =
+            ("https://trakt.tv/assets/main/poster-bg@2x-c9b1fab0a183c593d63095bb454a73fe.jpg")
+                .toHttpUrl()
     }
 }

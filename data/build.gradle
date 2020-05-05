@@ -42,6 +42,11 @@ android {
     }
 }
 
+ext {
+    roomigrant = '0.1.7'
+    chuncker = '3.2.0'
+}
+
 dependencies {
 
     /** Platform Dependencies */
@@ -79,4 +84,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:$retrofit")
     implementation("com.squareup.retrofit2:converter-gson:$retrofit")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpLogger")
+
+    debugImplementation("com.github.ChuckerTeam.Chucker:library:$chuncker")
+    releaseImplementation("com.github.ChuckerTeam.Chucker:library-no-op:$chuncker")
 }

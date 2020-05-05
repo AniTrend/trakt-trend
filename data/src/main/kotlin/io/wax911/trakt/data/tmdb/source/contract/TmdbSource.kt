@@ -13,11 +13,11 @@ import kotlinx.coroutines.launch
 
 abstract class TmdbSource(
     dispatchers: SupportDispatchers
-) : SupportCoroutineDataSource<List<IShowImage>>(dispatchers) {
+) : SupportCoroutineDataSource(dispatchers) {
 
     protected abstract val observable: ISourceObservable<ITmdbImage, List<IShowImage>>
 
-    protected abstract suspend fun findMatching(tmdb: ITmdbImage): List<IShowImage>
+    protected abstract suspend fun findMatching(tmdb: ITmdbImage)
 
     operator fun invoke(tmdb: ITmdbImage): LiveData<List<IShowImage>> {
         retry = { findMatching(tmdb) }

@@ -2,6 +2,7 @@ package io.wax911.trakt.show.ui.fragment
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.whenResumed
 import co.anitrend.arch.domain.entities.NetworkState
@@ -35,7 +36,7 @@ class FragmentShowList(
         MediaAdapter(
             object : ItemClickListener<ISharedMediaWithImage> {
                 override fun onItemClick(target: View, data: Pair<Int, ISharedMediaWithImage?>) {
-
+                    Toast.makeText(target.context, "${data.second?.media?.id}", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onItemLongClick(target: View, data: Pair<Int, ISharedMediaWithImage?>) {
