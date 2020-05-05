@@ -10,22 +10,22 @@ import kotlinx.coroutines.flow.Flow
 internal abstract class TmdbDao: ISupportQuery<TmdbImageEntity> {
 
     @Query("""
-        select count(id) from TmdbImageEntity where id = :tmdb
+        select count(id) from TmdbImageEntity where showId = :tmdb
         """)
     abstract suspend fun count(tmdb: Int): Int
 
     @Query("""
-        select * from TmdbImageEntity  where id = :tmdb
+        select * from TmdbImageEntity  where showId = :tmdb
     """)
     abstract fun getByIdFlow(tmdb: Int): Flow<List<TmdbImageEntity>>
 
     @Query("""
-        select * from TmdbImageEntity  where id = :tmdb
+        select * from TmdbImageEntity  where showId = :tmdb
     """)
     abstract suspend fun getById(tmdb: Int): List<TmdbImageEntity>
 
     @Query("""
-        delete from TmdbImageEntity where id = :tmdb
+        delete from TmdbImageEntity where showId = :tmdb
     """)
     abstract suspend fun deleteAll(tmdb: Int)
 

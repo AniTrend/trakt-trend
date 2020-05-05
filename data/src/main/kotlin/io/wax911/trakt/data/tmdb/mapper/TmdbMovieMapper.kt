@@ -6,6 +6,7 @@ import io.wax911.trakt.data.arch.mapper.TraktTrendMapper
 import io.wax911.trakt.data.tmdb.datasource.local.TmdbDao
 import io.wax911.trakt.data.tmdb.entity.TmdbImageEntity
 import io.wax911.trakt.data.tmdb.enums.TmdbImageType
+import io.wax911.trakt.data.tmdb.extensions.generateIdFromPath
 
 internal class TmdbMovieMapper(
     private val localDao: TmdbDao
@@ -20,8 +21,8 @@ internal class TmdbMovieMapper(
     override suspend fun onResponseMapFrom(source: Movie): List<TmdbImageEntity> {
         fun mapImage(image: Image, type: TmdbImageType): TmdbImageEntity {
             return TmdbImageEntity(
-                id = source.id!!,
-                showId = 0,
+                id = image.file_path!!.generateIdFromPath(),
+                showId = source.id!!.toLong(),
                 path = image.file_path!!,
                 type = type,
                 language = image.iso_639_1,

@@ -25,3 +25,10 @@ fun Collection<IShowImage>.findHighestRatedBackdrop(): IShowImage? {
     return filter { it.type == ShowImageType.BACKDROP }
         .maxBy { it.rating + (if (it.isPrimary) 10f else 0f) }
 }
+
+internal fun String.generateIdFromPath() : Int {
+    val code = hashCode()
+    return if (code < 1)
+        code * -1
+    else code
+}
