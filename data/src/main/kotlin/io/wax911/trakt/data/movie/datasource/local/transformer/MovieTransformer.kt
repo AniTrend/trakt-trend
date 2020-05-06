@@ -33,7 +33,8 @@ internal object MovieTransformer : ISupportMapperHelper<Movie, ShowEntity> {
             genres = source.genres.orEmpty(),
             traktId = source.ids?.trakt,
             tmdbId = source.ids?.tmdb,
-            showType = MediaType.MOVIE
+            showType = MediaType.MOVIE,
+            id = source.ids?.trakt ?: 0
         )
     }
 }

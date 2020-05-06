@@ -20,7 +20,6 @@ import io.wax911.trakt.data.tmdb.entity.TmdbImageEntity
 internal abstract class TraktTrendRoomSource : RoomDatabase(), ITraktTrendDatabase {
 
     companion object {
-
         fun newInstance(context: Context): ITraktTrendDatabase {
             return Room.databaseBuilder(
                 context,

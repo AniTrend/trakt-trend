@@ -18,7 +18,9 @@ import io.wax911.trakt.data.show.entity.ShowEntity
 import io.wax911.trakt.domain.models.MediaType
 import io.wax911.trakt.data.show.mapper.ShowMapper
 import io.wax911.trakt.data.show.source.contract.ShowPagedSource
+import io.wax911.trakt.data.tmdb.enums.TmdbImageType
 import io.wax911.trakt.domain.entities.image.TmdbImage
+import io.wax911.trakt.domain.entities.image.enums.ShowImageType
 import io.wax911.trakt.domain.entities.shared.ShowWithImage
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
 
@@ -67,6 +69,7 @@ internal class ShowPagedSourceImpl(
                         media = show,
                         image = TmdbImage(
                             type = MediaType.SERIES,
+                            imageType = ShowImageType.POSTER,
                             id = it.tmdbId ?: 0
                         )
                     )

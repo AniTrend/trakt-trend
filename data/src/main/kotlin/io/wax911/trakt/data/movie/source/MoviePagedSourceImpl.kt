@@ -18,6 +18,7 @@ import io.wax911.trakt.data.movie.source.contract.MoviePagedSource
 import io.wax911.trakt.data.show.datasource.local.ShowDao
 import io.wax911.trakt.data.show.entity.ShowEntity
 import io.wax911.trakt.domain.entities.image.TmdbImage
+import io.wax911.trakt.domain.entities.image.enums.ShowImageType
 import io.wax911.trakt.domain.models.MediaType
 import io.wax911.trakt.domain.entities.shared.ShowWithImage
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
@@ -68,6 +69,7 @@ internal class MoviePagedSourceImpl(
                         media = show,
                         image = TmdbImage(
                             type = MediaType.MOVIE,
+                            imageType = ShowImageType.POSTER,
                             id = it.tmdbId ?: 0
                         )
                     )

@@ -31,8 +31,8 @@ internal data class ShowEntity(
     override val homepage: String?,
     override val language: String?,
     override val genres: List<String>,
-    @PrimaryKey(autoGenerate = true)
-    override val id: Int = 0,
+    @PrimaryKey
+    override val id: Int,
     override val traktId: Int?,
     override val tmdbId: Int?,
     override val showType: MediaType,

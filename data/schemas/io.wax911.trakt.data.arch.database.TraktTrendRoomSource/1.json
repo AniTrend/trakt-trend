@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "91ba31684f6c360e69ad607bffa2c1c9",
+    "identityHash": "e166fe376c5840d2f7e8d43a3992ed52",
     "entities": [
       {
         "tableName": "ShowEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`airs` INTEGER, `network` TEXT, `country` TEXT, `status` TEXT, `title` TEXT, `overview` TEXT, `rating` REAL, `votes` INTEGER, `updated` INTEGER, `translations` TEXT NOT NULL, `year` INTEGER, `certification` TEXT, `tagLine` TEXT, `released` INTEGER, `runtime` INTEGER, `trailer` TEXT, `homepage` TEXT, `language` TEXT, `genres` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `traktId` INTEGER, `tmdbId` INTEGER, `showType` TEXT NOT NULL, `watchers` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`airs` INTEGER, `network` TEXT, `country` TEXT, `status` TEXT, `title` TEXT, `overview` TEXT, `rating` REAL, `votes` INTEGER, `updated` INTEGER, `translations` TEXT NOT NULL, `year` INTEGER, `certification` TEXT, `tagLine` TEXT, `released` INTEGER, `runtime` INTEGER, `trailer` TEXT, `homepage` TEXT, `language` TEXT, `genres` TEXT NOT NULL, `id` INTEGER NOT NULL, `traktId` INTEGER, `tmdbId` INTEGER, `showType` TEXT NOT NULL, `watchers` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "airs",
@@ -157,7 +157,7 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
@@ -222,7 +222,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '91ba31684f6c360e69ad607bffa2c1c9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e166fe376c5840d2f7e8d43a3992ed52')"
     ]
   }
 }

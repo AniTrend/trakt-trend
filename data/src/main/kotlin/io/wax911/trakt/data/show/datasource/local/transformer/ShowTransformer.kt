@@ -41,7 +41,8 @@ internal object ShowTransformer : ISupportMapperHelper<Show, ShowEntity> {
             genres = source.genres.orEmpty(),
             traktId = source.ids?.trakt,
             tmdbId = source.ids?.tmdb,
-            showType = MediaType.SERIES
+            showType = MediaType.SERIES,
+            id = source.ids?.trakt ?: 0
         )
     }
 }
