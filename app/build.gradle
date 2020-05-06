@@ -26,6 +26,7 @@ ext {
     leakCanary = '2.2'
     debugDB = '1.0.6'
     treessence = '0.3.2'
+    recycler = '1.2.0-alpha03'
 }
 
 
@@ -47,6 +48,7 @@ dependencies {
     implementation("org.koin:koin-core:$koin")
     implementation("org.koin:koin-core-ext:$koin")
     implementation("org.koin:koin-androidx-scope:$koin")
+    implementation("org.koin:koin-androidx-fragment:$koin") // unstable
     implementation("org.koin:koin-androidx-viewmodel:$koin")
 
     /** Material Design */

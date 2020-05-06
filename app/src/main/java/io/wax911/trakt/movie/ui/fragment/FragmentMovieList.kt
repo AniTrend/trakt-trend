@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.whenResumed
 import co.anitrend.arch.extension.LAZY_MODE_UNSAFE
 import co.anitrend.arch.extension.argument
 import co.anitrend.arch.ui.fragment.paged.SupportFragmentPagedList
@@ -15,9 +14,9 @@ import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
 import io.wax911.trakt.domain.models.MediaPayload
 import io.wax911.trakt.movie.viewmodel.MovieViewModel
 import io.wax911.trakt.shared.MediaAdapter
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class FragmentMovieList(
     override val columnSize: Int = R.integer.grid_list_x3
@@ -45,39 +44,21 @@ class FragmentMovieList(
         )
     }
 
-    /**
-     * Invoke view model observer to watch for changes
-     */
     override fun setUpViewModelObserver() {
-        viewModel.modelState.model.observe(this, Observer {
-            onPostModelChange(it)
-        })
+        viewModel.modelState.model.observe(
+            viewLifecycleOwner,
+            Observer {
+                onPostModelChange(it)
+            }
+        )
     }
 
-    /**
-     * Proxy for a view model state if one exists
-     */
     override fun viewModelState() = viewModel.modelState
 
-    /**
-     * Additional initialization to be done in this method, if the overriding class is type of [SupportFragmentPagedList]
-     * then this method will be called in [SupportFragmentPagedList.onCreate].
-     * invokes this function
-     *
-     * @see [SupportFragmentPagedList.onCreate]
-     * @param
-     */
     override fun initializeComponents(savedInstanceState: Bundle?) {
-        launch {
-            viewLifecycleOwner.whenResumed {
-                onFetchDataInitialize()
-            }
-        }
+        Timber.tag(moduleTag).v(viewModel.toString())
     }
 
-    /**
-     * Update views or bind a liveData to them
-     */
     override fun onUpdateUserInterface() {
 
     }
@@ -90,14 +71,21 @@ class FragmentMovieList(
         }
     }
 
+    /**
+     * Called when the view previously created by [onCreateView] has
+     * been detached from the fragment. The next time the fragment needs
+     * to be displayed, a new view will be created.  This is called
+     * after [onStop] and before [onDestroy]. It is called
+     * **regardless** of whether [onCreateView] returned a
+     * non-null view. Internally it is called after the view's state has
+     * been saved but before it has been removed from its parent.
+     */
+    override fun onDestroyView() {
+        supportRecyclerView?.adapter = null
+        super.onDestroyView()
+    }
+
     companion object {
-
-        const val PARAM_MOVIE_TYPE = "FragmentMovieList:PARAM_MOVIE_TYPE"
-
-        fun newInstance(bundle: Bundle?): FragmentMovieList {
-            val fragment = FragmentMovieList()
-            fragment.arguments = bundle
-            return fragment
-        }
+        const val PARAM_MOVIE_TYPE = ":PARAM_SHOW_TYPE"
     }
 }

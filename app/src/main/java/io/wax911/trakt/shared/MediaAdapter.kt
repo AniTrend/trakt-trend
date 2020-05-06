@@ -19,6 +19,10 @@ class MediaAdapter(
     override val stateConfig: StateLayoutConfig
 ) : SupportPagedListAdapter<ISharedMediaWithImage>() {
 
+    init {
+        setHasStableIds(true)
+    }
+
     /**
      * Used to get stable ids for [androidx.recyclerview.widget.RecyclerView.Adapter] but only if
      * [androidx.recyclerview.widget.RecyclerView.Adapter.setHasStableIds] is set to true.
@@ -52,17 +56,11 @@ class MediaAdapter(
 
     class ShowViewHolder(
         private val binding: AdapterMediaItemBinding,
-        listener: ItemClickListener<ISharedMediaWithImage>
+        private var clickListener: ItemClickListener<ISharedMediaWithImage>?
     ): SupportViewHolder<ISharedMediaWithImage>(binding.root) {
 
         private var media: ISharedMediaWithImage? = null
         private var disposible: RequestDisposable? = null
-
-        init {
-            binding.root.setOnClickListener {
-                onItemClick(it, listener)
-            }
-        }
 
         /**
          * Load images, text, buttons, etc. in this method from the given parameter
@@ -74,21 +72,19 @@ class MediaAdapter(
                 disposible = binding.showImage.using(image)
                 binding.showTitle.text = media.title
             }
+            clickListener?.also { clickHandler ->
+                binding.root.setOnClickListener {
+                    onItemClick(it, clickHandler)
+                }
+            }
         }
 
-        /**
-         * If any image views are used within the view holder, clear any pending async requests
-         * by using [com.bumptech.glide.RequestManager.clear]
-         *
-         * @see com.bumptech.glide.Glide
-         */
         override fun onViewRecycled() {
-            media = null
-            disposible?.apply {
-                if (!isDisposed)
-                    dispose()
-            }
+            binding.root.setOnClickListener(null)
+            disposible?.dispose()
+            clickListener = null
             disposible = null
+            media = null
         }
 
         override fun onItemClick(

@@ -19,14 +19,6 @@
         app:hideOnScroll="true"
         app:navigationIcon="@drawable/ic_menu_adaptable_24dp" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingShortcutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_anchor="@id/bottomAppBar"
-        app:backgroundTint="@color/colorAccent"
-        app:srcCompat="@drawable/ic_code_24dp"/>
-
     <FrameLayout
         android:id="@+id/bottomNavigationDrawer"
         android:layout_width="match_parent"

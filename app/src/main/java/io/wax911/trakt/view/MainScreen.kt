@@ -8,22 +8,20 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import co.anitrend.arch.ui.activity.SupportActivity
-import co.anitrend.arch.ui.common.ISupportActionUp
-import co.anitrend.arch.ui.fragment.SupportFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import io.wax911.trakt.R
+import io.wax911.trakt.core.extension.commit
 import io.wax911.trakt.core.view.TraktTrendActivity
 import io.wax911.trakt.domain.models.MediaPayload
 import io.wax911.trakt.domain.usecases.MediaRequestType
+import io.wax911.trakt.core.model.FragmentItem
 import io.wax911.trakt.movie.ui.fragment.FragmentMovieList
 import io.wax911.trakt.show.ui.fragment.FragmentShowList
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import org.koin.androidx.fragment.android.setupKoinFragmentFactory
+import org.koin.androidx.scope.lifecycleScope
 
 class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -36,6 +34,11 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
     @StringRes
     private var selectedTitle: Int = R.string.nav_popular_series
 
+    override fun configureActivity() {
+        super.configureActivity()
+        setupKoinFragmentFactory(lifecycleScope)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -43,22 +46,11 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
         bottomDrawerBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    /**
-     * Additional initialization to be done in this method, if the overriding class is type of [SupportFragment]
-     * then this method will be called in [SupportFragment.onCreate]. Otherwise [SupportActivity.onPostCreate]
-     * invokes this function
-     *
-     * @see [SupportActivity.onPostCreate] and [SupportFragment.onCreate]
-     * @param
-     */
     override fun initializeComponents(savedInstanceState: Bundle?) {
         bottomAppBar.apply {
             setNavigationOnClickListener {
                 bottomDrawerBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
             }
-        }
-        floatingShortcutButton.setOnClickListener {
-            Toast.makeText(this, "Fab Clicked", Toast.LENGTH_SHORT).show()
         }
         bottomNavigationView.apply {
             launch {
@@ -122,7 +114,7 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
     }
 
     private suspend fun onNavigate(@IdRes menu: Int) {
-        var actionUpFragment: ISupportActionUp? = null
+        var fragmentItem: FragmentItem<*>? = null
         when (menu) {
             R.id.nav_theme -> {
                 when (AppCompatDelegate.getDefaultNightMode()) {
@@ -137,28 +129,30 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
             R.id.nav_contact -> Toast.makeText(this@MainScreen, "Contact", Toast.LENGTH_SHORT).show()
             R.id.nav_popular_series -> {
                 selectedTitle = R.string.nav_popular_series
-                actionUpFragment = FragmentShowList.newInstance(
-                    Bundle().also {
-                        it.putParcelable(
+                fragmentItem = FragmentItem(
+                    parameter = Bundle().apply {
+                        putParcelable(
                             FragmentShowList.PARAM_SHOW_TYPE,
                             MediaPayload(
                                 MediaRequestType.POPULAR
                             )
                         )
-                    }
+                    },
+                    fragment = FragmentShowList::class.java
                 )
             }
             R.id.nav_popular_movies -> {
                 selectedTitle = R.string.nav_popular_movies
-                actionUpFragment = FragmentMovieList.newInstance(
-                    Bundle().also {
-                        it.putParcelable(
+                fragmentItem = FragmentItem(
+                    parameter = Bundle().apply {
+                        putParcelable(
                             FragmentMovieList.PARAM_MOVIE_TYPE,
                             MediaPayload(
                                 MediaRequestType.POPULAR
                             )
                         )
-                    }
+                    },
+                    fragment = FragmentMovieList::class.java
                 )
             }
         }
@@ -166,16 +160,7 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
         bottomAppBar.setTitle(selectedTitle)
         bottomDrawerBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
 
-        try {
-            actionUpFragment?.apply {
-                this as Fragment
-                supportFragmentManager.commit {
-                    replace(R.id.contentFrame, this@apply, tag)
-                }
-            }
-        } catch (e: Exception) {
-            Timber.tag(moduleTag).e(e)
-        }
+        currentFragmentTag = supportFragmentManager.commit(R.id.contentFrame, fragmentItem)
     }
 
     override fun onUpdateUserInterface() {

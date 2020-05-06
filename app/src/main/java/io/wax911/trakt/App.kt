@@ -6,7 +6,9 @@ import io.wax911.trakt.core.TraktTrendApplication
 import io.wax911.trakt.koin.appModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.fragment.koin.fragmentFactory
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import timber.log.Timber
 import java.io.File
 
@@ -38,7 +40,10 @@ class App : TraktTrendApplication() {
      */
     override fun initializeDependencyInjection() {
         startKoin {
-            androidLogger()
+            fragmentFactory()
+            androidLogger(
+                level = if (BuildConfig.DEBUG) Level.DEBUG else Level.ERROR
+            )
             androidContext(
                 applicationContext
             )

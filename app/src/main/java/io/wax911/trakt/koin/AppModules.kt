@@ -10,9 +10,12 @@ import io.wax911.trakt.R
 import io.wax911.trakt.core.koin.coreModules
 import io.wax911.trakt.data.arch.di.dataModules
 import io.wax911.trakt.movie.viewmodel.MovieViewModel
+import io.wax911.trakt.show.ui.fragment.FragmentShowList
 import io.wax911.trakt.show.viewmodel.ShowViewModel
+import io.wax911.trakt.view.MainScreen
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.fragment.dsl.fragment
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -37,6 +40,13 @@ private val appModule = module {
     }
 }
 
+private val fragmentModule = module {
+    scope<MainScreen> {
+        fragment {
+            FragmentShowList()
+        }
+    }
+}
 
 private val viewModelModule = module {
     viewModel {
@@ -52,5 +62,5 @@ private val viewModelModule = module {
 }
 
 val appModules = listOf(
-    appModule, viewModelModule
+    appModule, viewModelModule, fragmentModule
 ) + coreModules
