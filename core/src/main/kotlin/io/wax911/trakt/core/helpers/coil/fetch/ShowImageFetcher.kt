@@ -7,18 +7,14 @@ import coil.fetch.FetchResult
 import coil.fetch.Fetcher
 import coil.fetch.SourceResult
 import coil.map.MeasuredMapper
-import coil.size.PixelSize
 import coil.size.Size
 import io.wax911.trakt.core.helpers.coil.model.ImageConfig
-import io.wax911.trakt.data.tmdb.extensions.findHighestRatedPoster
-import io.wax911.trakt.data.tmdb.helper.TmdbImageUrlProvider
 import io.wax911.trakt.data.tmdb.source.contract.TmdbSource
 import io.wax911.trakt.domain.entities.image.contract.IShowImage
 import io.wax911.trakt.domain.entities.image.contract.ITmdbImage
 import io.wax911.trakt.domain.entities.image.enums.ShowImageType
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
@@ -38,7 +34,13 @@ class ShowImageFetcher(
             Timber.tag(moduleTag).v(
                 "Images retrieved from tmdb source for item: ${data.id} -> ${images.size}"
             )
-            val poster = ImageConfig(images).bestPostImage()
+            val imageConfig = ImageConfig(images)
+            val poster = when(data.imageType) {
+                ShowImageType.BACKDROP -> imageConfig.bestBackDropImage()
+                ShowImageType.POSTER -> imageConfig.bestPosterImage()
+                ShowImageType.LOGO -> imageConfig.bestLogoImage()
+            }
+
             Timber.tag(moduleTag).v("Best image selected: ${poster?.path}")
             poster?.let { mapper.map(poster, size) }
         }.getOrElse {

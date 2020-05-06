@@ -27,8 +27,8 @@ ext {
     debugDB = '1.0.6'
     treessence = '0.3.2'
     recycler = '1.2.0-alpha03'
+    workflow = '0.26.0'
 }
-
 
 dependencies {
 
@@ -89,6 +89,8 @@ dependencies {
 
     /** Timber Trees */
     implementation("fr.bipi.treessence:treessence:$treessence")
+
+    implementation("com.squareup.workflow:workflow-ui-core-android:$workflow")
 
     /** Testing-only dependencies */
     testImplementation("org.koin:koin-test:$koin")
