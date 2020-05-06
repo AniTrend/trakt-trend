@@ -4,10 +4,24 @@ buildscript {
     apply from: "./gradle/gradle-ext-versions.gradle"
 
     ext {
-        coil = '0.10.1'
         buildTools = '3.6.3'
         googleServices = "4.3.3"
         fabricTools = "1.31.2"
+
+        materialDialogs = '3.3.0'
+        smartTab = '2.0.0'
+        tapTarget = '3.0.0'
+        flexBox = '2.0.1'
+
+        coil = '0.10.1'
+        gson = '2.8.5'
+        timber = '4.7.1'
+        threetenabp = '1.2.2'
+
+        retrofit = '2.7.0'
+        okHttpLogger = '4.0.1'
+
+        mockk = '1.10.0'
     }
 
     repositories {
