@@ -29,7 +29,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:padding="@dimen/lg_margin"
-            android:background="@color/secondaryDarkColor"
+            android:background="@color/titleShade"
             android:textAppearance="?attr/textAppearanceBody2"
             tools:text="@sample/response.json/title" />
 
