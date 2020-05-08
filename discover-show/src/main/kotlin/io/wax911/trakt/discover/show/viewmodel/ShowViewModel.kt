@@ -1,8 +1,8 @@
-package io.wax911.trakt.show.viewmodel
+package io.wax911.trakt.discover.show.viewmodel
 
 import androidx.lifecycle.ViewModel
 import io.wax911.trakt.data.show.usecase.SeriesUseCaseType
-import io.wax911.trakt.show.viewmodel.model.ShowModelState
+import io.wax911.trakt.discover.show.viewmodel.model.ShowModelState
 
 class ShowViewModel(
     useCase: SeriesUseCaseType

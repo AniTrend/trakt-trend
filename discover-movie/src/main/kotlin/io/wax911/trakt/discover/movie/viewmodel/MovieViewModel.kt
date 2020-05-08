@@ -1,16 +1,14 @@
-package io.wax911.trakt.movie.viewmodel
+package io.wax911.trakt.discover.movie.viewmodel
 
 import androidx.lifecycle.ViewModel
 import io.wax911.trakt.data.movie.usecase.FilmUseCaseType
-import io.wax911.trakt.movie.viewmodel.model.MovieModelState
+import io.wax911.trakt.discover.movie.viewmodel.model.MovieModelState
 
 class MovieViewModel(
     useCase: FilmUseCaseType
 ) : ViewModel() {
 
-    val modelState by lazy {
-        MovieModelState(useCase)
-    }
+    val modelState = MovieModelState(useCase)
 
     /**
      * This method will be called when this ViewModel is no longer used and will be destroyed.

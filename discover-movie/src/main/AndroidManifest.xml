@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dist="http://schemas.android.com/apk/distribution"
+    package="io.wax911.trakt.discover.movie">
+
+    <application>
+        <activity android:name=".view.screen.MovieScreen" />
+    </application>
+</manifest>
+

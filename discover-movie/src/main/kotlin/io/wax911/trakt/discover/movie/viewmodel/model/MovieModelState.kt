@@ -1,25 +1,34 @@
-package io.wax911.trakt.show.viewmodel.model
+package io.wax911.trakt.discover.movie.viewmodel.model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import androidx.paging.PagedList
 import co.anitrend.arch.core.model.ISupportViewModelState
 import co.anitrend.arch.data.model.UserInterfaceState
 import co.anitrend.arch.domain.entities.NetworkState
-import io.wax911.trakt.data.show.usecase.SeriesUseCaseType
+import io.wax911.trakt.data.movie.usecase.FilmUseCaseType
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
-import io.wax911.trakt.domain.entities.show.contract.ISharedMedia
 import io.wax911.trakt.domain.models.MediaPayload
+import io.wax911.trakt.shared.discover.model.MediaItem
 
-class ShowModelState(
-    private val useCase: SeriesUseCaseType
-) : ISupportViewModelState<PagedList<ISharedMediaWithImage>> {
+class MovieModelState(
+    private val useCase: FilmUseCaseType
+) : ISupportViewModelState<PagedList<MediaItem>> {
 
     private val useCaseResult = MutableLiveData<UserInterfaceState<PagedList<ISharedMediaWithImage>>>()
 
     override val model =
-        Transformations.switchMap(useCaseResult) { it.model }
+        Transformations.switchMap(useCaseResult) {
+            it.model.map { pagedList ->
+                PagedList.Builder(
+                    pagedList.dataSource.map { item ->
+                        MediaItem(item)
+                    }, pagedList.config
+                ).build()
+            }
+        }
 
     override val networkState: LiveData<NetworkState>? =
         Transformations.switchMap(useCaseResult) { it.networkState }
