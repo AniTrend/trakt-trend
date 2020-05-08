@@ -44,6 +44,12 @@
                     android:resource="@xml/support_file_provider_paths"/>
         </provider>
 
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            tools:node="remove"
+            android:exported="false" />
+
     </application>
 
 </manifest>

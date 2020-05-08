@@ -8,20 +8,21 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import io.wax911.trakt.R
 import io.wax911.trakt.core.extension.commit
+import io.wax911.trakt.core.extension.toBundle
+import io.wax911.trakt.core.model.FragmentItem
 import io.wax911.trakt.core.view.TraktTrendActivity
 import io.wax911.trakt.domain.models.MediaPayload
 import io.wax911.trakt.domain.usecases.MediaRequestType
-import io.wax911.trakt.core.model.FragmentItem
-import io.wax911.trakt.movie.ui.fragment.FragmentMovieList
-import io.wax911.trakt.show.ui.fragment.FragmentShowList
+import io.wax911.trakt.navigation.NavigationTargets
+import io.wax911.trakt.navigation.extensions.forFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
-import org.koin.androidx.fragment.android.setupKoinFragmentFactory
-import org.koin.androidx.scope.lifecycleScope
+import timber.log.Timber
 
 class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -33,11 +34,6 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
 
     @StringRes
     private var selectedTitle: Int = R.string.nav_popular_series
-
-    override fun configureActivity() {
-        super.configureActivity()
-        setupKoinFragmentFactory(lifecycleScope)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,12 +49,10 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
             }
         }
         bottomNavigationView.apply {
-            launch {
-                setNavigationItemSelectedListener(this@MainScreen)
-            }
+            setNavigationItemSelectedListener(this@MainScreen)
             setCheckedItem(selectedItem)
         }
-        onUpdateUserInterface()
+        updateUserInterface()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -103,18 +97,15 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
         if (selectedItem != item.itemId) {
             if (item.groupId != R.id.nav_group_customization) {
                 selectedItem = item.itemId
-                launch {
-                    onNavigate(selectedItem)
-                }
-            } else launch{
-                onNavigate(item.itemId)
-            }
+                onNavigateToTarget(selectedItem)
+            } else onNavigateToTarget(item.itemId)
+
         }
         return true
     }
 
     private suspend fun onNavigate(@IdRes menu: Int) {
-        var fragmentItem: FragmentItem<*>? = null
+        var fragmentItem: FragmentItem<Fragment>? = null
         when (menu) {
             R.id.nav_theme -> {
                 when (AppCompatDelegate.getDefaultNightMode()) {
@@ -129,51 +120,55 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
             R.id.nav_contact -> Toast.makeText(this@MainScreen, "Contact", Toast.LENGTH_SHORT).show()
             R.id.nav_popular_series -> {
                 selectedTitle = R.string.nav_popular_series
-                fragmentItem = FragmentItem(
-                    parameter = Bundle().apply {
-                        putParcelable(
-                            FragmentShowList.PARAM_SHOW_TYPE,
-                            MediaPayload(
-                                MediaRequestType.POPULAR
-                            )
-                        )
-                    },
-                    fragment = FragmentShowList::class.java
-                )
+                fragmentItem = NavigationTargets
+                    .ShowListContent
+                    .forFragment<Fragment>()?.let {
+                    FragmentItem(
+                        parameter = MediaPayload(
+                            MediaRequestType.POPULAR
+                        ).toBundle(NavigationTargets.ShowListContent.PARAM),
+                        fragment = it
+                    )
+                }
             }
             R.id.nav_popular_movies -> {
                 selectedTitle = R.string.nav_popular_movies
-                fragmentItem = FragmentItem(
-                    parameter = Bundle().apply {
-                        putParcelable(
-                            FragmentMovieList.PARAM_MOVIE_TYPE,
-                            MediaPayload(
-                                MediaRequestType.POPULAR
-                            )
-                        )
-                    },
-                    fragment = FragmentMovieList::class.java
-                )
+                fragmentItem = NavigationTargets
+                    .MovieListContent
+                    .forFragment<Fragment>()?.let {
+                    FragmentItem(
+                        parameter = MediaPayload(
+                            MediaRequestType.POPULAR
+                        ).toBundle(NavigationTargets.ShowListContent.PARAM),
+                        fragment = it
+                    )
+                }
             }
         }
 
         bottomAppBar.setTitle(selectedTitle)
         bottomDrawerBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
 
-        currentFragmentTag = supportFragmentManager.commit(R.id.contentFrame, fragmentItem)
-    }
-
-    override fun onUpdateUserInterface() {
-        if (selectedItem != 0) launch {
-            onNavigate(selectedItem)
-        }
-        else launch {
-            onNavigate(R.id.nav_popular_series)
+        currentFragmentTag = supportFragmentManager.commit(R.id.contentFrame, fragmentItem) {
+            // Nothing to do with transaction, no animations or anything like that
         }
     }
 
-    override fun onFetchDataInitialize() {
+    private fun onNavigateToTarget(@IdRes menu: Int) {
+        launch {
+            runCatching {
+                onNavigate(menu)
+            }.onFailure {
+                Timber.tag(moduleTag).e(it)
+            }
+        }
+    }
 
+    private fun updateUserInterface() {
+        if (selectedItem != 0)
+            onNavigateToTarget(selectedItem)
+        else
+            onNavigateToTarget(R.id.nav_popular_series)
     }
 
     companion object {

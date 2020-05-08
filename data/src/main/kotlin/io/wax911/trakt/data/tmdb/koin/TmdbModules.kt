@@ -10,7 +10,6 @@ import io.wax911.trakt.data.tmdb.mapper.TmdbShowMapper
 import io.wax911.trakt.data.tmdb.repository.TmdbRepository
 import io.wax911.trakt.data.tmdb.source.TmdbSourceImpl
 import io.wax911.trakt.data.tmdb.source.contract.TmdbSource
-import io.wax911.trakt.data.tmdb.usecase.TmdbUseCaseManager
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -85,12 +84,10 @@ private val repositoryModule = module {
 
 private val useCaseModule = module {
     single {
-        TmdbUseCaseManager(
-            source = tmdb().configurationService()
-        )
+
     }
 }
 
 internal val tmdbModules = listOf(
-    networkModule, mapperModule, dataSourceModule, repositoryModule, useCaseModule
+    networkModule, mapperModule, dataSourceModule, repositoryModule
 )
