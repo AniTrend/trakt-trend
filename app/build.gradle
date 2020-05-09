@@ -1,0 +1,69 @@
+plugins {
+    id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-android-extensions")
+    id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin")
+}
+
+apply from: "../gradle/gradle-common-config.gradle"
+apply from: "../gradle/gradle-common-dependencies.gradle"
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+android {
+    defaultConfig {
+        applicationId "io.wax911.trakt"
+    }
+}
+
+ext {
+    leakCanary = '2.2'
+    debugDB = '1.0.6'
+    treessence = '0.3.2'
+}
+
+dependencies {
+
+    /** Platform Dependencies */
+    implementation project(":support-recycler")
+    implementation project(":support-domain")
+    implementation project(":support-theme")
+    implementation project(":support-core")
+    implementation project(":support-data")
+    implementation project(":support-ext")
+    implementation project(":support-ui")
+
+    implementation project(":navigation")
+    implementation project(":domain")
+    implementation project(":data")
+    implementation project(":core")
+
+    runtimeOnly project(":discover-movie")
+    runtimeOnly project(":discover-show")
+
+    /** Material Design */
+    implementation("com.google.android.material:material:$material")
+
+    /** Architecture Components */
+    implementation("androidx.core:core-ktx:$ktx")
+    implementation("androidx.fragment:fragment-ktx:$fragmentKtx")
+    implementation("androidx.work:work-runtime-ktx:$workerKtx")
+
+    /** Lifecycle Components */
+    implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleX")
+
+    /** Timber Trees */
+    implementation("fr.bipi.treessence:treessence:$treessence")
+
+    // debugImplementation because LeakCanary should only run in debug builds.
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanary")
+    debugImplementation("com.amitshekhar.android:debug-db:$debugDB")
+}
+
+if (file("google-services.json").exists()) {
+    apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'io.fabric'
+}

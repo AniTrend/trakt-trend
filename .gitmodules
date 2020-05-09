@@ -1,0 +1,3 @@
+[submodule "support-arch"]
+	path = support-arch
+	url = https://github.com/AniTrend/support-arch/

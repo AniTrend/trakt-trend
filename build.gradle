@@ -1,0 +1,59 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    apply from: "./gradle/gradle-ext-versions.gradle"
+
+    ext {
+        buildTools = '3.6.3'
+        googleServices = "4.3.3"
+        fabricTools = "1.31.2"
+
+        materialDialogs = '3.3.0'
+        smartTab = '2.0.0'
+        tapTarget = '3.0.0'
+        flexBox = '2.0.1'
+
+        coil = '0.10.1'
+        gson = '2.8.5'
+        timber = '4.7.1'
+        threetenabp = '1.2.2'
+
+        retrofit = '2.7.0'
+        okHttpLogger = '4.0.1'
+
+        mockk = '1.10.0'
+
+        // temporary till material include state restoration and merge adapter
+        recycler = '1.2.0-alpha03'
+        workflow = '0.26.0'
+    }
+
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:$buildTools"
+        classpath "com.google.gms:google-services:$googleServices"
+        classpath "io.fabric.tools:gradle:$fabricTools"
+
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigation"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
