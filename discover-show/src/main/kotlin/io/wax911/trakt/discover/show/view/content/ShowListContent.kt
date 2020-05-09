@@ -4,20 +4,20 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import co.anitrend.arch.domain.entities.NetworkState
 import co.anitrend.arch.extension.argument
 import co.anitrend.arch.extension.attachComponent
 import co.anitrend.arch.extension.detachComponent
 import co.anitrend.arch.recycler.common.DefaultClickableItem
-import co.anitrend.arch.recycler.model.contract.IRecyclerItem
 import co.anitrend.arch.ui.fragment.paged.SupportFragmentPagedList
 import co.anitrend.arch.ui.view.widget.model.StateLayoutConfig
 import io.wax911.trakt.discover.show.R
 import io.wax911.trakt.discover.show.di.dynamicModuleHelper
 import io.wax911.trakt.discover.show.viewmodel.ShowViewModel
+import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
 import io.wax911.trakt.domain.models.MediaPayload
 import io.wax911.trakt.navigation.NavigationTargets
 import io.wax911.trakt.shared.discover.adapter.MediaAdapter
-import io.wax911.trakt.shared.discover.model.MediaItem
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
@@ -27,7 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ShowListContent(
     override val defaultSpanSize: Int = R.integer.grid_list_x3
-) : SupportFragmentPagedList<IRecyclerItem>() {
+) : SupportFragmentPagedList<ISharedMediaWithImage>() {
 
     private val payload by argument<MediaPayload>(
         NavigationTargets.ShowListContent.PARAM
@@ -59,11 +59,10 @@ class ShowListContent(
         super.initializeComponents(savedInstanceState)
         attachComponent(dynamicModuleHelper)
         lifecycleScope.launchWhenResumed {
-            supportViewAdapter.clickableFlow
-                .debounce(16)
-                .filterIsInstance<DefaultClickableItem<MediaItem>>()
+            supportViewAdapter.clickableFlow.debounce(16)
+                .filterIsInstance<DefaultClickableItem<ISharedMediaWithImage>>()
                 .collect {
-                    val model = it.data?.entity
+                    val model = it.data
                     Toast.makeText(
                         context,
                         "${model?.media?.id} - ${model?.media?.title}",
@@ -86,7 +85,12 @@ class ShowListContent(
             viewModel.modelState(
                 payload = it
             )
-        }
+        } ?: supportStateLayout?.networkStateLiveData?.postValue(
+            NetworkState.Error(
+                heading = "Missing payload",
+                message = "Did you forget to pass in a payload?"
+            )
+        )
     }
 
     /**
