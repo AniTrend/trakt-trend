@@ -6,6 +6,7 @@ plugins {
 }
 
 apply from: "../gradle/gradle-common-config.gradle"
+apply from: "../gradle/gradle-common-dependencies.gradle"
 
 android {
     defaultConfig {
@@ -55,11 +56,6 @@ dependencies {
     implementation project(":support-ext")
     implementation project(":domain")
 
-
-    /** Koin AndroidX Dependency Injection */
-    implementation("org.koin:koin-core:$koin")
-    implementation("org.koin:koin-core-ext:$koin")
-    implementation("org.koin:koin-androidx-scope:$koin")
 
     /** Architecture Components */
     implementation("androidx.core:core-ktx:$ktx")

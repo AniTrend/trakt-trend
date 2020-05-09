@@ -32,7 +32,7 @@ class SplashScreen : TraktTrendActivity() {
             supportDateHelper.getCurrentYear(0)
         )
         splash_description.text = description
-        onFetchDataInitialize()
+        updateUserInterface()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,18 +40,12 @@ class SplashScreen : TraktTrendActivity() {
         setContentView(R.layout.activity_splash)
     }
 
-    override fun onUpdateUserInterface() {
+    private fun updateUserInterface() {
         launch {
-            delay(1000)
-            withContext(Dispatchers.Main) {
-                startNewActivity<MainScreen>(intent.extras)
-                finish()
-            }
+            delay(500)
+            startNewActivity<MainScreen>(intent.extras)
+            finish()
         }
 
-    }
-
-    override fun onFetchDataInitialize() {
-        onUpdateUserInterface()
     }
 }

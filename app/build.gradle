@@ -7,6 +7,7 @@ plugins {
 }
 
 apply from: "../gradle/gradle-common-config.gradle"
+apply from: "../gradle/gradle-common-dependencies.gradle"
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -15,10 +16,6 @@ repositories {
 android {
     defaultConfig {
         applicationId "io.wax911.trakt"
-        vectorDrawables.useSupportLibrary = true
-    }
-    viewBinding {
-        enabled = true
     }
 }
 
@@ -26,13 +23,12 @@ ext {
     leakCanary = '2.2'
     debugDB = '1.0.6'
     treessence = '0.3.2'
-    recycler = '1.2.0-alpha03'
-    workflow = '0.26.0'
 }
 
 dependencies {
 
     /** Platform Dependencies */
+    implementation project(":support-recycler")
     implementation project(":support-domain")
     implementation project(":support-theme")
     implementation project(":support-core")
@@ -40,60 +36,27 @@ dependencies {
     implementation project(":support-ext")
     implementation project(":support-ui")
 
+    implementation project(":navigation")
     implementation project(":domain")
     implementation project(":data")
     implementation project(":core")
 
-    /** Koin AndroidX Dependency Injection */
-    implementation("org.koin:koin-core:$koin")
-    implementation("org.koin:koin-core-ext:$koin")
-    implementation("org.koin:koin-androidx-scope:$koin")
-    implementation("org.koin:koin-androidx-fragment:$koin") // unstable
-    implementation("org.koin:koin-androidx-viewmodel:$koin")
+    runtimeOnly project(":discover-movie")
+    runtimeOnly project(":discover-show")
 
     /** Material Design */
     implementation("com.google.android.material:material:$material")
 
     /** Architecture Components */
     implementation("androidx.core:core-ktx:$ktx")
-    implementation("androidx.paging:paging-runtime:$paging")
-    implementation("androidx.preference:preference:$preferenceX")
-    implementation("androidx.paging:paging-runtime-ktx:$pagingKtx")
     implementation("androidx.fragment:fragment-ktx:$fragmentKtx")
     implementation("androidx.work:work-runtime-ktx:$workerKtx")
+
+    /** Lifecycle Components */
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleX")
-    implementation("androidx.constraintlayout:constraintlayout:$constraintX")
-    implementation("androidx.navigation:navigation-ui-ktx:$navigation")
-    implementation("androidx.navigation:navigation-fragment-ktx:$navigation")
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshX")
-
-    implementation("androidx.recyclerview:recyclerview:$recycler")
-
-    /** Material Dialogs */
-    implementation("com.afollestad.material-dialogs:core:$materialDialogs")
-    implementation("com.afollestad.material-dialogs:input:$materialDialogs")
-    implementation("com.afollestad.material-dialogs:lifecycle:$materialDialogs")
-    implementation("com.afollestad.material-dialogs:bottomsheets:$materialDialogs")
-
-    /** Coil libraries */
-    implementation("io.coil-kt:coil:$coil")
-
-    /** Flex Box */
-    implementation("com.google.android:flexbox:$flexBox")
-
-    /** Smart Tab Layout */
-    implementation("com.ogaclejapan.smarttablayout:library:$smartTab")
-
-    /** Tap Target Prompt */
-    implementation("uk.co.samuelwall:material-tap-target-prompt:$tapTarget")
 
     /** Timber Trees */
     implementation("fr.bipi.treessence:treessence:$treessence")
-
-    implementation("com.squareup.workflow:workflow-ui-core-android:$workflow")
-
-    /** Testing-only dependencies */
-    testImplementation("org.koin:koin-test:$koin")
 
     // debugImplementation because LeakCanary should only run in debug builds.
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanary")

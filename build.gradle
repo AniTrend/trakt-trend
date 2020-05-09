@@ -22,6 +22,10 @@ buildscript {
         okHttpLogger = '4.0.1'
 
         mockk = '1.10.0'
+
+        // temporary till material include state restoration and merge adapter
+        recycler = '1.2.0-alpha03'
+        workflow = '0.26.0'
     }
 
     repositories {
