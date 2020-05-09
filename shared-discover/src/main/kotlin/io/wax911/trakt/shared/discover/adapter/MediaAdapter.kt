@@ -7,19 +7,21 @@ import androidx.recyclerview.widget.RecyclerView
 import co.anitrend.arch.core.model.IStateLayoutConfig
 import co.anitrend.arch.recycler.action.contract.ISupportSelectionMode
 import co.anitrend.arch.recycler.adapter.SupportPagedListAdapter
-import co.anitrend.arch.recycler.holder.SupportViewHolder
+import co.anitrend.arch.recycler.adapter.contract.ISupportAdapter.Companion.FULL_SPAN_SIZE
 import co.anitrend.arch.recycler.model.contract.IRecyclerItem
 import co.anitrend.arch.recycler.model.contract.IRecyclerItemSpan.Companion.INVALID_SPAN_COUNT
 import co.anitrend.arch.theme.animator.ScaleAnimator
 import co.anitrend.arch.theme.animator.contract.ISupportAnimator
+import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
 import io.wax911.trakt.shared.discover.model.MediaItem
 import timber.log.Timber
 
 class MediaAdapter(
-    private val resources: Resources,
+    override val resources: Resources,
     override val stateConfiguration: IStateLayoutConfig,
-    override var customSupportAnimator: ISupportAnimator? = ScaleAnimator()
-) : SupportPagedListAdapter(MediaItem.DIFFER) {
+    override var customSupportAnimator: ISupportAnimator? = ScaleAnimator(),
+    override val mapper: (ISharedMediaWithImage?) -> IRecyclerItem = { MediaItem(it) }
+) : SupportPagedListAdapter<ISharedMediaWithImage>(MediaItem.DIFFER) {
 
     /**
      * Assigned if the current adapter supports needs to supports action mode
@@ -33,8 +35,8 @@ class MediaAdapter(
      * The identifiable id of each item should unique, and if non exists
      * then this function should return [androidx.recyclerview.widget.RecyclerView.NO_ID]
      */
-    override fun getStableIdFor(item: IRecyclerItem?): Long {
-        return item?.id ?: RecyclerView.NO_ID
+    override fun getStableIdFor(item: ISharedMediaWithImage?): Long {
+        return item?.media?.id?.toLong() ?: RecyclerView.NO_ID
     }
 
     /**
@@ -47,25 +49,4 @@ class MediaAdapter(
         viewType: Int,
         layoutInflater: LayoutInflater
     ) = MediaItem.createViewHolder(parent, layoutInflater)
-
-    /**
-     * Should return the span size for the item at [position], when called from [GridLayoutManager]
-     * [spanCount] will be the span size for the item at the [position]. Otherwise if called
-     * from [StaggeredGridLayoutManager] then [spanCount] may be null
-     *
-     * @param position item position in the adapter
-     * @param spanCount current span count for the layout manager
-     *
-     * @see co.anitrend.arch.recycler.model.contract.IRecyclerItemSpan
-     */
-    override fun getSpanSizeForItemAt(position: Int, spanCount: Int?): Int? {
-        return runCatching {
-            val item = getItem(position)
-            val spanSize = spanCount ?: INVALID_SPAN_COUNT
-            item?.getSpanSize(spanSize, position, resources)
-        }.getOrElse {
-            Timber.tag(moduleTag).w(it)
-            INVALID_SPAN_COUNT
-        }
-    }
 }

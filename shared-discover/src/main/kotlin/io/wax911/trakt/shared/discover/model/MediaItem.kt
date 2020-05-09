@@ -10,7 +10,6 @@ import co.anitrend.arch.recycler.common.ClickableItem
 import co.anitrend.arch.recycler.common.DefaultClickableItem
 import co.anitrend.arch.recycler.holder.SupportViewHolder
 import co.anitrend.arch.recycler.model.RecyclerItem
-import co.anitrend.arch.recycler.model.contract.IRecyclerItem
 import coil.request.RequestDisposable
 import io.wax911.trakt.core.extension.using
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
@@ -18,8 +17,8 @@ import io.wax911.trakt.shared.discover.R
 import io.wax911.trakt.shared.discover.databinding.AdapterMediaItemBinding
 
 data class MediaItem(
-    val entity: ISharedMediaWithImage
-) : RecyclerItem(entity.media.id.toLong()) {
+    val entity: ISharedMediaWithImage?
+) : RecyclerItem(entity?.media?.id?.toLong()) {
 
     private var disposable: RequestDisposable? = null
 
@@ -34,8 +33,10 @@ data class MediaItem(
         clickObservable: MutableLiveData<ClickableItem>
     ) {
         val binding = AdapterMediaItemBinding.bind(view)
-        disposable = binding?.showImage?.using(entity.image)
-        binding?.showTitle?.text = entity.media.title
+        if (entity != null) {
+            disposable = binding?.showImage?.using(entity.image)
+            binding?.showTitle?.text = entity.media.title
+        }
         view.setOnClickListener {
             clickObservable.postValue(
                 DefaultClickableItem(
@@ -75,22 +76,21 @@ data class MediaItem(
             layoutInflater, viewGroup, false
         ).let { SupportViewHolder(it.root) }
 
-        internal val DIFFER = object : DiffUtil.ItemCallback<IRecyclerItem>() {
-            override fun areItemsTheSame(
-                oldItem: IRecyclerItem,
-                newItem: IRecyclerItem
-            ): Boolean {
-                oldItem as MediaItem
-                return oldItem.entity.media.id == oldItem.entity.media.id
-            }
+        internal val DIFFER =
+            object : DiffUtil.ItemCallback<ISharedMediaWithImage>() {
+                override fun areItemsTheSame(
+                    oldItem: ISharedMediaWithImage,
+                    newItem: ISharedMediaWithImage
+                ): Boolean {
+                    return oldItem.media.id == oldItem.media.id
+                }
 
-            override fun areContentsTheSame(
-                oldItem: IRecyclerItem,
-                newItem: IRecyclerItem
-            ): Boolean {
-                oldItem as MediaItem
-                return oldItem.entity.media.hashCode() == oldItem.entity.media.hashCode()
+                override fun areContentsTheSame(
+                    oldItem: ISharedMediaWithImage,
+                    newItem: ISharedMediaWithImage
+                ): Boolean {
+                    return oldItem.media.hashCode() == oldItem.media.hashCode()
+                }
             }
-        }
     }
 }
