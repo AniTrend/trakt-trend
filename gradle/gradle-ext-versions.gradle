@@ -3,8 +3,8 @@ ext {
     targetSdk = 29
     minSdk = 21
 
-    versionCode = 10201
-    versionName = '0.2.0-alpha01'
+    versionCode = 10301
+    versionName = '0.3.0-alpha01'
 
     material = '1.1.0'
     preferenceX = "1.1.1"
