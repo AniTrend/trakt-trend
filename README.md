@@ -1,15 +1,26 @@
 # [ :biohazard: W.I.P :biohazard: ] Trakt-Trend
 
-### Sample
+### Getting starte
+
+Add a file called `secrets.properties` in `./data/.config/` the file should contain the following (case sensitive):
+
+> ```gradle
+> clientId = "YOUR_OWN_TRAKT_API_KEY"
+> clientSecret = "YOUR_OWN_TRAKT_API_SECRET"
+> tmdbSecret = "YOUR_OWN_TMDB_API_KEY"
+> ```
+
+### The sample
 
 Trakt-Trend is a simple application built on top of [support-arch](https://github.com/AniTrend/support-arch) only for the sole purpose
 of demonstrating how to use the library in preparation for AniTrend v2.0. As such this may never become a fully featured application,
 beyond being a playground.
 
-<img src="./screenshots/Screenshot_1589033578" width="250px" /> <img src="./screenshots/Screenshot_1589033579" width="250px" />
-<img src="./screenshots/Screenshot_1589033594" width="250px" /> <img src="./screenshots/Screenshot_1589033600" width="250px" />
+<img src="./screenshots/Screenshot_1589033578.webp" width="250px" />&nbsp;<img src="./screenshots/Screenshot_1589033589.webp" width="250px" />
 
-### Libraries Used
+<img src="./screenshots/Screenshot_1589033594.webp" width="250px" />&nbsp;<img src="./screenshots/Screenshot_1589033600.webp" width="250px" />
+
+### Libraries used
 
 #### Core
 
