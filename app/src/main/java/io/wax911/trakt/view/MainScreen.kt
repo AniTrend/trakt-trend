@@ -139,7 +139,7 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
                     FragmentItem(
                         parameter = MediaPayload(
                             MediaRequestType.POPULAR
-                        ).toBundle(NavigationTargets.ShowListContent.PARAM),
+                        ).toBundle(NavigationTargets.MovieListContent.PARAM),
                         fragment = it
                     )
                 }
