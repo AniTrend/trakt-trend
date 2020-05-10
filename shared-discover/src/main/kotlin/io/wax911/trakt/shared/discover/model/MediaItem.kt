@@ -82,14 +82,14 @@ data class MediaItem(
                     oldItem: ISharedMediaWithImage,
                     newItem: ISharedMediaWithImage
                 ): Boolean {
-                    return oldItem.media.id == oldItem.media.id
+                    return oldItem.media.id == newItem.media.id
                 }
 
                 override fun areContentsTheSame(
                     oldItem: ISharedMediaWithImage,
                     newItem: ISharedMediaWithImage
                 ): Boolean {
-                    return oldItem.media.hashCode() == oldItem.media.hashCode()
+                    return oldItem.media.hashCode() == newItem.media.hashCode()
                 }
             }
     }
