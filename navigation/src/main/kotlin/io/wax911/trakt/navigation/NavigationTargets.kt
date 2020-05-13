@@ -17,7 +17,10 @@
 
 package io.wax911.trakt.navigation
 
+import android.content.Context
+import android.os.Parcelable
 import io.wax911.trakt.navigation.contract.NavigationComponent
+import kotlinx.android.parcel.Parcelize
 
 object NavigationTargets {
 
@@ -26,6 +29,26 @@ object NavigationTargets {
         className = "ShowScreen"
     ) {
         const val PARAM = "ShowScreen:PARAM"
+
+        operator fun invoke(context: Context?, params: Params) {
+            navRouterIntent?.putExtra(PARAM, params)
+            super.invoke(context)
+        }
+
+        @Parcelize
+        data class Params(
+            val bounds: Bounds,
+            val showId: Int
+        ) : Parcelable {
+
+            @Parcelize
+            data class Bounds(
+                val left: Int,
+                val top: Int,
+                val right: Int,
+                val bottom: Int
+            ) : Parcelable
+        }
     }
 
     object ShowListContent : NavigationComponent(

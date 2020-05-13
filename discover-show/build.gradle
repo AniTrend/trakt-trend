@@ -17,6 +17,8 @@ android {
 dependencies {
     implementation project(":shared-discover")
 
+    implementation 'me.saket:inboxrecyclerview:2.0.0-beta3'
+
     implementation("androidx.recyclerview:recyclerview:$recycler")
     implementation("com.ogaclejapan.smarttablayout:library:$smartTab")
     implementation("com.squareup.workflow:workflow-ui-core-android:$workflow")

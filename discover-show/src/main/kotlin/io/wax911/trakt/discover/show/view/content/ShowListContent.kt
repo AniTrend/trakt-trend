@@ -1,7 +1,7 @@
 package io.wax911.trakt.discover.show.view.content
 
+import android.graphics.Rect
 import android.os.Bundle
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import co.anitrend.arch.domain.entities.NetworkState
@@ -63,11 +63,20 @@ class ShowListContent(
                 .filterIsInstance<DefaultClickableItem<ISharedMediaWithImage>>()
                 .collect {
                     val model = it.data
-                    Toast.makeText(
-                        context,
-                        "${model?.media?.id} - ${model?.media?.title}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val context = it.view.context
+                    val l = IntArray(2)
+                    it.view.getLocationOnScreen(l)
+                    val x = l[0]
+                    val y = l[1]
+                    val w = it.view.width
+                    val h = it.view.height
+                    val params = NavigationTargets.ShowScreen.Params(
+                        NavigationTargets.ShowScreen.Params.Bounds(
+                            x, y, x + w, y + h
+                        ),
+                        model?.media?.id ?: 0
+                    )
+                    NavigationTargets.ShowScreen(context, params)
                 }
         }
     }
