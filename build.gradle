@@ -19,7 +19,7 @@ buildscript {
         threetenabp = '1.2.2'
 
         retrofit = '2.8.1'
-        okHttpLogger = '4.0.1'
+        okHttpLogger = '4.6.0'
 
         mockk = '1.10.0'
 
