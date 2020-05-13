@@ -20,7 +20,7 @@ android {
 }
 
 ext {
-    leakCanary = '2.2'
+    leakCanary = '2.3'
     debugDB = '1.0.6'
     treessence = '0.3.2'
 }
