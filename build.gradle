@@ -18,7 +18,7 @@ buildscript {
         timber = '4.7.1'
         threetenabp = '1.2.2'
 
-        retrofit = '2.7.0'
+        retrofit = '2.8.1'
         okHttpLogger = '4.0.1'
 
         mockk = '1.10.0'
