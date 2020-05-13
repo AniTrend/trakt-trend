@@ -16,7 +16,7 @@ buildscript {
         coil = '0.10.1'
         gson = '2.8.5'
         timber = '4.7.1'
-        threetenabp = '1.2.2'
+        threetenabp = '1.2.4'
 
         retrofit = '2.8.1'
         okHttpLogger = '4.6.0'
