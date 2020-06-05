@@ -1,47 +1,19 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+import io.wax911.trakt.buildSrc.Libraries
 
 buildscript {
-    apply from: "./gradle/gradle-ext-versions.gradle"
-
-    ext {
-        buildTools = '4.0.0'
-        googleServices = "4.3.3"
-        fabricTools = "1.31.2"
-
-        materialDialogs = '3.3.0'
-        smartTab = '2.0.0'
-        tapTarget = '3.0.0'
-        flexBox = '2.0.1'
-
-        coil = '0.11.0'
-        gson = '2.8.5'
-        timber = '4.7.1'
-        threetenabp = '1.2.4'
-
-        retrofit = '2.9.0'
-        okHttpLogger = '4.7.2'
-
-        mockk = '1.10.0'
-
-        // temporary till material include state restoration and merge adapter
-        recycler = '1.2.0-alpha03'
-        workflow = '0.28.0'
-    }
-
     repositories {
         google()
         jcenter()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
-        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:$buildTools"
-        classpath "com.google.gms:google-services:$googleServices"
-        classpath "io.fabric.tools:gradle:$fabricTools"
+        classpath(Libraries.Android.Tools.buildGradle)
+        classpath(Libraries.Google.Services.googleServices)
+        classpath(Libraries.Google.Firebase.Crashlytics.Gradle.plugin)
 
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigation"
+        classpath(Libraries.Kotlin.Gradle.plugin)
+        classpath(Libraries.AndroidX.Navigation.safeArgsGradlePlugin)
     }
 }
 
@@ -50,10 +22,12 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
+        maven {
+            url = "https://jitpack.io"
+        }
     }
 }
 
-task clean(type: Delete) {
+tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
