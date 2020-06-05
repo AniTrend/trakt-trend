@@ -1,15 +1,14 @@
 package io.wax911.trakt.discover.show.view.content
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import co.anitrend.arch.domain.entities.NetworkState
-import co.anitrend.arch.extension.argument
-import co.anitrend.arch.extension.attachComponent
-import co.anitrend.arch.extension.detachComponent
+import co.anitrend.arch.extension.ext.argument
+import co.anitrend.arch.extension.ext.attachComponent
+import co.anitrend.arch.extension.ext.detachComponent
 import co.anitrend.arch.recycler.common.DefaultClickableItem
-import co.anitrend.arch.ui.fragment.paged.SupportFragmentPagedList
+import co.anitrend.arch.ui.fragment.list.SupportFragmentList
 import co.anitrend.arch.ui.view.widget.model.StateLayoutConfig
 import io.wax911.trakt.discover.show.R
 import io.wax911.trakt.discover.show.di.dynamicModuleHelper
@@ -27,7 +26,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ShowListContent(
     override val defaultSpanSize: Int = R.integer.grid_list_x3
-) : SupportFragmentPagedList<ISharedMediaWithImage>() {
+) : SupportFragmentList<ISharedMediaWithImage>() {
 
     private val payload by argument<MediaPayload>(
         NavigationTargets.ShowListContent.PARAM
@@ -54,20 +53,19 @@ class ShowListContent(
      *
      * @param savedInstanceState
      */
-    @FlowPreview
     override fun initializeComponents(savedInstanceState: Bundle?) {
         super.initializeComponents(savedInstanceState)
         attachComponent(dynamicModuleHelper)
         lifecycleScope.launchWhenResumed {
-            supportViewAdapter.clickableFlow.debounce(16)
+            supportViewAdapter.clickableStateFlow.debounce(16)
                 .filterIsInstance<DefaultClickableItem<ISharedMediaWithImage>>()
                 .collect {
                     val model = it.data
-                    Toast.makeText(
-                        context,
-                        "${model?.media?.id} - ${model?.media?.title}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val context = it.view.context
+                    val params = NavigationTargets.ShowScreen.Params(
+                        model?.media?.id ?: 0
+                    )
+                    NavigationTargets.ShowScreen(context, params)
                 }
         }
     }
@@ -81,16 +79,18 @@ class ShowListContent(
      * @see initializeComponents
      */
     override fun onFetchDataInitialize() {
-        payload?.also {
+        val payload = payload?.also {
             viewModel.modelState(
                 payload = it
             )
-        } ?: supportStateLayout?.networkStateLiveData?.postValue(
-            NetworkState.Error(
-                heading = "Missing payload",
-                message = "Did you forget to pass in a payload?"
-            )
-        )
+        }
+        if (payload != null) {
+            supportStateLayout?.networkMutableStateFlow?.value =
+                NetworkState.Error(
+                    heading = "Missing payload",
+                    message = "Did you forget to pass in a payload?"
+                )
+        }
     }
 
     /**

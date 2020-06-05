@@ -15,7 +15,7 @@ import io.wax911.trakt.R
 import io.wax911.trakt.core.extension.commit
 import io.wax911.trakt.core.extension.toBundle
 import io.wax911.trakt.core.model.FragmentItem
-import io.wax911.trakt.core.view.TraktTrendActivity
+import io.wax911.trakt.core.view.activity.TraktTrendActivity
 import io.wax911.trakt.domain.models.MediaPayload
 import io.wax911.trakt.domain.usecases.MediaRequestType
 import io.wax911.trakt.navigation.NavigationTargets
@@ -33,7 +33,7 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
     private var selectedItem: Int = R.id.nav_popular_series
 
     @StringRes
-    private var selectedTitle: Int = R.string.nav_popular_series
+    private var selectedTitle: Int = R.string.nav_shows
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,23 +119,22 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
             R.id.nav_about -> Toast.makeText(this@MainScreen, "About", Toast.LENGTH_SHORT).show()
             R.id.nav_contact -> Toast.makeText(this@MainScreen, "Contact", Toast.LENGTH_SHORT).show()
             R.id.nav_popular_series -> {
-                selectedTitle = R.string.nav_popular_series
-                fragmentItem = NavigationTargets
-                    .ShowListContent
-                    .forFragment<Fragment>()?.let {
-                    FragmentItem(
-                        parameter = MediaPayload(
-                            MediaRequestType.POPULAR
-                        ).toBundle(NavigationTargets.ShowListContent.PARAM),
-                        fragment = it
-                    )
-                }
+                selectedTitle = R.string.nav_shows
+                fragmentItem = NavigationTargets.ShowListContent
+                    .forFragment()?.let {
+                        FragmentItem(
+                            parameter = MediaPayload(
+                                MediaRequestType.POPULAR
+                            ).toBundle(NavigationTargets.ShowListContent.PARAM),
+                            fragment = it
+                        )
+                    }
             }
             R.id.nav_popular_movies -> {
-                selectedTitle = R.string.nav_popular_movies
+                selectedTitle = R.string.nav_movies
                 fragmentItem = NavigationTargets
                     .MovieListContent
-                    .forFragment<Fragment>()?.let {
+                    .forFragment()?.let {
                     FragmentItem(
                         parameter = MediaPayload(
                             MediaRequestType.POPULAR

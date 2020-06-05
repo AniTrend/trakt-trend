@@ -37,7 +37,7 @@ abstract class NavigationComponent(
     /**
      * Starts the target [navRouterIntent] for the implementation
      */
-    operator fun invoke(context: Context?) {
+    open operator fun invoke(context: Context?) {
         runCatching {
             context?.startActivity(navRouterIntent)
         }.exceptionOrNull()?.printStackTrace()

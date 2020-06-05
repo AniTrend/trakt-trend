@@ -2,12 +2,12 @@ package io.wax911.trakt.data.tmdb.datasource.local
 
 import androidx.room.Dao
 import androidx.room.Query
-import co.anitrend.arch.data.dao.ISupportQuery
+import io.wax911.trakt.data.arch.database.common.DaoQuery
 import io.wax911.trakt.data.tmdb.entity.TmdbImageEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-internal abstract class TmdbDao: ISupportQuery<TmdbImageEntity> {
+internal abstract class TmdbDao : DaoQuery<TmdbImageEntity> {
 
     @Query("""
         select count(id) from TmdbImageEntity where showId = :tmdb

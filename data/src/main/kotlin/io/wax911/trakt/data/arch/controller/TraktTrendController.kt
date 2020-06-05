@@ -5,7 +5,7 @@ import androidx.paging.PagingRequestHelper
 import co.anitrend.arch.data.common.ISupportPagingResponse
 import co.anitrend.arch.data.common.ISupportResponse
 import co.anitrend.arch.domain.entities.NetworkState
-import co.anitrend.arch.extension.SupportDispatchers
+import co.anitrend.arch.extension.dispatchers.SupportDispatchers
 import io.wax911.trakt.data.arch.controller.strategy.ControllerStrategy
 import io.wax911.trakt.data.arch.extensions.fetchBodyWithRetry
 import io.wax911.trakt.data.arch.mapper.TraktTrendMapper

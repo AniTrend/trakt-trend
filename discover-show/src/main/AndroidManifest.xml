@@ -3,7 +3,9 @@
     package="io.wax911.trakt.discover.show">
 
     <application>
-        <activity android:name=".view.screen.ShowScreen" />
+        <activity android:name=".view.screen.ShowScreen"
+            android:theme="@style/AppTheme.TransparentWindow"
+            />
     </application>
 </manifest>
 

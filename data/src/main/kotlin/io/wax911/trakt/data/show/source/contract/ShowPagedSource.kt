@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import androidx.paging.PagingRequestHelper
 import co.anitrend.arch.data.source.contract.ISourceObservable
-import co.anitrend.arch.extension.SupportDispatchers
+import co.anitrend.arch.extension.dispatchers.SupportDispatchers
 import io.wax911.trakt.data.arch.common.TraktPagedSource
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
 

@@ -6,7 +6,6 @@ import co.anitrend.arch.core.analytic.contract.ISupportAnalytics
 import coil.Coil
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import io.wax911.trakt.core.analytics.AnalyticsLogger
 import io.wax911.trakt.core.helpers.coil.fetch.ShowImageFetcher
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
@@ -16,8 +15,6 @@ import timber.log.Timber
  * Core application
  */
 abstract class TraktTrendApplication : Application(), Configuration.Provider {
-
-    private val analytics by inject<ISupportAnalytics>()
 
     /** [Koin](https://insert-koin.io/docs/2.0/getting-started/)
      *
@@ -30,9 +27,10 @@ abstract class TraktTrendApplication : Application(), Configuration.Provider {
      * Timber logging tree depending on the build type we plant the appropriate tree
      */
     protected open fun plantLoggingTree() {
+        val analytics by inject<ISupportAnalytics>()
         when (BuildConfig.DEBUG) {
             true -> Timber.plant(Timber.DebugTree())
-            else -> Timber.plant(analytics as AnalyticsLogger)
+            else -> Timber.plant(analytics as Timber.Tree)
         }
     }
 

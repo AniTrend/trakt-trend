@@ -5,11 +5,11 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import co.anitrend.arch.domain.entities.NetworkState
-import co.anitrend.arch.extension.argument
-import co.anitrend.arch.extension.attachComponent
-import co.anitrend.arch.extension.detachComponent
+import co.anitrend.arch.extension.ext.argument
+import co.anitrend.arch.extension.ext.attachComponent
+import co.anitrend.arch.extension.ext.detachComponent
 import co.anitrend.arch.recycler.common.DefaultClickableItem
-import co.anitrend.arch.ui.fragment.paged.SupportFragmentPagedList
+import co.anitrend.arch.ui.fragment.list.SupportFragmentList
 import co.anitrend.arch.ui.view.widget.model.StateLayoutConfig
 import io.wax911.trakt.discover.movie.R
 import io.wax911.trakt.discover.movie.di.dynamicModuleHelper
@@ -27,7 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MovieListContent(
     override val defaultSpanSize: Int = R.integer.grid_list_x3
-) : SupportFragmentPagedList<ISharedMediaWithImage>() {
+) : SupportFragmentList<ISharedMediaWithImage>() {
 
     private val payload by argument<MediaPayload>(
         NavigationTargets.MovieListContent.PARAM
@@ -59,7 +59,7 @@ class MovieListContent(
         super.initializeComponents(savedInstanceState)
         attachComponent(dynamicModuleHelper)
         lifecycleScope.launchWhenResumed {
-            supportViewAdapter.clickableFlow.debounce(16)
+            supportViewAdapter.clickableStateFlow.debounce(16)
                 .filterIsInstance<DefaultClickableItem<ISharedMediaWithImage>>()
                 .collect {
                     val model = it.data
@@ -85,12 +85,14 @@ class MovieListContent(
             viewModel.modelState(
                 payload = it
             )
-        } ?: supportStateLayout?.networkStateLiveData?.postValue(
-            NetworkState.Error(
-                heading = "Missing payload",
-                message = "Did you forget to pass in a payload?"
-            )
-        )
+        }
+        if (payload == null)
+            supportStateLayout?.networkMutableStateFlow?.value =
+                NetworkState.Error(
+                    heading = "Missing payload",
+                    message = "Did you forget to pass in a payload?"
+                )
+
     }
 
     /**

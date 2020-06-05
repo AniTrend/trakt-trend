@@ -1,17 +1,14 @@
 package io.wax911.trakt.splash.ui.activity
 
 import android.os.Bundle
-import co.anitrend.arch.extension.startNewActivity
+import co.anitrend.arch.extension.ext.startNewActivity
 import co.anitrend.arch.extension.util.date.SupportDateHelper
 import io.wax911.trakt.R
-import io.wax911.trakt.core.presenter.CorePresenter
-import io.wax911.trakt.core.view.TraktTrendActivity
+import io.wax911.trakt.core.view.activity.TraktTrendActivity
 import io.wax911.trakt.view.MainScreen
 import kotlinx.android.synthetic.main.activity_splash.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 
 class SplashScreen : TraktTrendActivity() {

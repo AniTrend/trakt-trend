@@ -3,7 +3,7 @@ package io.wax911.trakt.data.arch.common
 import androidx.paging.PagedList
 import androidx.paging.PagingRequestHelper
 import co.anitrend.arch.data.source.paging.SupportPagingDataSource
-import co.anitrend.arch.extension.SupportDispatchers
+import co.anitrend.arch.extension.dispatchers.SupportDispatchers
 import kotlinx.coroutines.launch
 
 /**

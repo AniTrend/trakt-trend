@@ -2,16 +2,28 @@ package io.wax911.trakt.koin
 
 import android.content.Context
 import android.net.ConnectivityManager
+import co.anitrend.arch.core.analytic.contract.ISupportAnalytics
 import co.anitrend.arch.core.provider.SupportFileProvider
 import co.anitrend.arch.extension.network.SupportConnectivity
-import co.anitrend.arch.extension.systemServiceOf
+import co.anitrend.arch.extension.ext.systemServiceOf
 import co.anitrend.arch.ui.view.widget.model.StateLayoutConfig
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.ktx.Firebase
 import io.wax911.trakt.R
+import io.wax911.trakt.analytics.AnalyticsLogger
 import io.wax911.trakt.core.koin.coreModules
 import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 private val appModule = module {
+    factory<ISupportAnalytics> {
+        AnalyticsLogger(
+            crashlytics = FirebaseCrashlytics.getInstance(),
+            analytics = Firebase.analytics
+        )
+    }
     factory {
         SupportFileProvider()
     }
