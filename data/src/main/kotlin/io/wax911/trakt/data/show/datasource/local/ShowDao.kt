@@ -3,13 +3,13 @@ package io.wax911.trakt.data.show.datasource.local
 import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Query
-import co.anitrend.arch.data.dao.ISupportQuery
+import io.wax911.trakt.data.arch.database.common.DaoQuery
 import io.wax911.trakt.data.show.entity.ShowEntity
 import io.wax911.trakt.domain.models.MediaType
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-internal abstract class ShowDao: ISupportQuery<ShowEntity> {
+internal abstract class ShowDao: DaoQuery<ShowEntity> {
 
     @Query("""
         select count(id) from ShowEntity where showType = :showType

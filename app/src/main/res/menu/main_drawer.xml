@@ -9,13 +9,13 @@
                 <item
                     android:id="@+id/nav_popular_series"
                     android:icon="@drawable/ic_live_tv_24dp"
-                    android:title="@string/nav_popular_series"
+                    android:title="@string/nav_shows"
                     app:showAsAction="ifRoom|withText"/>
 
                 <item
                     android:id="@+id/nav_popular_movies"
                     android:icon="@drawable/ic_local_movies_24dp"
-                    android:title="@string/nav_popular_movies"
+                    android:title="@string/nav_movies"
                     app:showAsAction="ifRoom|withText"/>
             </group>
         </menu>

@@ -1,11 +1,11 @@
-package io.wax911.trakt.core.view
+package io.wax911.trakt.core.view.activity
 
 import android.os.Build
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
-import co.anitrend.arch.extension.getCompatColor
+import co.anitrend.arch.extension.ext.getCompatColor
 import co.anitrend.arch.ui.activity.SupportActivity
-import io.wax911.trakt.core.R
+import co.anitrend.arch.ui.R
 
 
 /**

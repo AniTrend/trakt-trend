@@ -1,9 +1,10 @@
 package io.wax911.trakt.data.tmdb.source.contract
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
 import co.anitrend.arch.data.source.contract.ISourceObservable
 import co.anitrend.arch.data.source.coroutine.SupportCoroutineDataSource
-import co.anitrend.arch.extension.SupportDispatchers
+import co.anitrend.arch.extension.dispatchers.SupportDispatchers
 import io.wax911.trakt.domain.entities.image.contract.IShowImage
 import io.wax911.trakt.domain.entities.image.contract.ITmdbImage
 import kotlinx.coroutines.Deferred
@@ -19,11 +20,12 @@ abstract class TmdbSource(
 
     protected abstract suspend fun findMatching(tmdb: ITmdbImage)
 
-    operator fun invoke(tmdb: ITmdbImage): LiveData<List<IShowImage>> {
-        retry = { findMatching(tmdb) }
-        launch { retry?.invoke() }
-        return observable(tmdb)
-    }
+    operator fun invoke(tmdb: ITmdbImage): LiveData<List<IShowImage>> =
+        liveData {
+            retry = { findMatching(tmdb) }
+            findMatching(tmdb)
+            emitSource(observable(tmdb))
+        }
 
     abstract suspend fun get(tmdb: ITmdbImage): List<IShowImage>
 }

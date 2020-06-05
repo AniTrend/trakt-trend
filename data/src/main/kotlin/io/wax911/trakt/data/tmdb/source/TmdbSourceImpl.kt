@@ -3,7 +3,7 @@ package io.wax911.trakt.data.tmdb.source
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import co.anitrend.arch.data.source.contract.ISourceObservable
-import co.anitrend.arch.extension.SupportDispatchers
+import co.anitrend.arch.extension.dispatchers.SupportDispatchers
 import co.anitrend.arch.extension.network.SupportConnectivity
 import com.uwetrottmann.tmdb2.entities.AppendToResponse
 import com.uwetrottmann.tmdb2.enumerations.AppendToResponseItem

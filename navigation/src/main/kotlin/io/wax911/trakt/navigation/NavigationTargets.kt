@@ -37,19 +37,14 @@ object NavigationTargets {
 
         @Parcelize
         data class Params(
-            val bounds: Bounds,
             val showId: Int
-        ) : Parcelable {
-
-            @Parcelize
-            data class Bounds(
-                val left: Int,
-                val top: Int,
-                val right: Int,
-                val bottom: Int
-            ) : Parcelable
-        }
+        ) : Parcelable
     }
+
+    object ShowContentRoot : NavigationComponent(
+        packageName = "discover.show.view.content",
+        className = "ShowListRootContent"
+    )
 
     object ShowListContent : NavigationComponent(
         packageName = "discover.show.view.content",

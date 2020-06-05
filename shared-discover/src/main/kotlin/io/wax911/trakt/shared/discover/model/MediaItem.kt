@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
+import co.anitrend.arch.recycler.action.contract.ISupportSelectionMode
 import co.anitrend.arch.recycler.common.ClickableItem
 import co.anitrend.arch.recycler.common.DefaultClickableItem
 import co.anitrend.arch.recycler.holder.SupportViewHolder
@@ -15,6 +16,7 @@ import io.wax911.trakt.core.extension.using
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
 import io.wax911.trakt.shared.discover.R
 import io.wax911.trakt.shared.discover.databinding.AdapterMediaItemBinding
+import kotlinx.coroutines.flow.MutableStateFlow
 
 data class MediaItem(
     val entity: ISharedMediaWithImage?
@@ -30,20 +32,20 @@ data class MediaItem(
         view: View,
         position: Int,
         payloads: List<Any>,
-        clickObservable: MutableLiveData<ClickableItem>
+        stateFlow: MutableStateFlow<ClickableItem?>,
+        selectionMode: ISupportSelectionMode<Long>?
     ) {
         val binding = AdapterMediaItemBinding.bind(view)
         if (entity != null) {
-            disposable = binding?.showImage?.using(entity.image)
-            binding?.showTitle?.text = entity.media.title
+            disposable = binding.showImage.using(entity.image)
+            binding.showTitle.text = entity.media.title
         }
         view.setOnClickListener {
-            clickObservable.postValue(
+            stateFlow.value =
                 DefaultClickableItem(
                     data = entity,
                     view = view
                 )
-            )
         }
     }
 

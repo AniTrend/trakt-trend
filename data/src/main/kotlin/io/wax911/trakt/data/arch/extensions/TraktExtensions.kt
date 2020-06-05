@@ -1,6 +1,6 @@
 package io.wax911.trakt.data.arch.extensions
 
-import co.anitrend.arch.extension.SupportDispatchers
+import co.anitrend.arch.extension.dispatchers.SupportDispatchers
 import co.anitrend.arch.extension.network.SupportConnectivity
 import com.uwetrottmann.tmdb2.Tmdb
 import com.uwetrottmann.trakt5.TraktV2

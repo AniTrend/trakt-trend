@@ -1,10 +1,8 @@
 package io.wax911.trakt.core.koin
 
-import co.anitrend.arch.core.analytic.contract.ISupportAnalytics
-import co.anitrend.arch.extension.SupportDispatchers
+import co.anitrend.arch.extension.dispatchers.SupportDispatchers
 import coil.map.MeasuredMapper
 import coil.util.CoilUtils
-import io.wax911.trakt.core.analytics.AnalyticsLogger
 import io.wax911.trakt.core.helpers.coil.fetch.ShowImageFetcher
 import io.wax911.trakt.core.helpers.coil.mapper.ShowImageMeasuredMapper
 import io.wax911.trakt.core.presenter.CorePresenter
@@ -19,11 +17,6 @@ import org.koin.dsl.binds
 import org.koin.dsl.module
 
 private val coreModule = module {
-    factory<ISupportAnalytics> {
-        AnalyticsLogger(
-            context = androidContext()
-        )
-    }
     factory {
         Settings(
             androidContext()

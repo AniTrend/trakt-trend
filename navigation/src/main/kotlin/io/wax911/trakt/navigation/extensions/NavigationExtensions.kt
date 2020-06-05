@@ -18,6 +18,7 @@
 package io.wax911.trakt.navigation.extensions
 
 import android.content.Intent
+import androidx.collection.lruCache
 import androidx.fragment.app.Fragment
 import io.wax911.trakt.navigation.contract.NavigationComponent
 import timber.log.Timber
@@ -25,7 +26,11 @@ import timber.log.Timber
 
 private const val APPLICATION_PACKAGE_NAME = "io.wax911.trakt"
 
-private val classMap = mutableMapOf<String, Class<*>>()
+private val classMap = lruCache<String, Class<*>>(
+    maxSize = 5, create = { `class` ->
+        Class.forName(`class`)
+    }
+)
 
 private inline fun <reified T : Any> Any.castOrNull() = this as? T
 
@@ -46,9 +51,7 @@ internal fun String.loadIntentOrNull(): Intent? =
 
 @Throws(ClassNotFoundException::class)
 internal fun <T> String.loadClassOrNull(): Class<out T>? =
-    classMap.getOrPut(this) {
-        Class.forName(this)
-    }.castOrNull()
+    classMap.get(this)?.castOrNull()
 
 internal fun <T : Fragment> String.loadFragmentOrNull(): T? =
     try {
@@ -66,14 +69,7 @@ fun NavigationComponent.forIntent(): Intent? {
 }
 
 /**
- * Initializes a fragment from the navigation component and returns it
- */
-fun NavigationComponent.forFragment(): Fragment? {
-    return forIntent()?.component?.className?.loadFragmentOrNull()
-}
-
-/**
  * Build fragment class from intent
  */
-fun <T: Fragment> NavigationComponent.forFragment() =
-    forIntent()?.component?.className?.loadClassOrNull<T>()
+fun NavigationComponent.forFragment(): Class<out Fragment>? =
+    forIntent()?.component?.className?.loadClassOrNull()
