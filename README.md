@@ -1,6 +1,6 @@
 # [ :biohazard: W.I.P :biohazard: ] Trakt-Trend
 
-### Getting starte
+### Getting started
 
 Add a file called `secrets.properties` in `./data/.config/` the file should contain the following (case sensitive):
 
