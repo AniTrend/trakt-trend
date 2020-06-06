@@ -15,7 +15,7 @@ internal class DependencyStrategy(
     private val module: String
 ) {
     private fun DependencyHandler.applyDefaultDependencies() {
-        add("implementation", Libraries.Kotlin.stdlib)
+        add("implementation", Libraries.JetBrains.Kotlin.stdlib)
         add("implementation", Libraries.timber)
 
         add("testImplementation", Libraries.junit)
@@ -37,9 +37,9 @@ internal class DependencyStrategy(
     }
 
     private fun DependencyHandler.applyCoroutinesDependencies() {
-        add("implementation", Libraries.Coroutines.android)
-        add("implementation", Libraries.Coroutines.core)
-        add("testImplementation", Libraries.Coroutines.test)
+        add("implementation", Libraries.JetBrains.Coroutines.android)
+        add("implementation", Libraries.JetBrains.Coroutines.core)
+        add("testImplementation", Libraries.JetBrains.Coroutines.test)
     }
 
     private fun DependencyHandler.applyKoinDependencies() {

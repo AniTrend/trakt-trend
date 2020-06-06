@@ -6,7 +6,6 @@ import com.android.build.gradle.api.AndroidBasePlugin
 import com.android.build.gradle.api.BaseVariantOutput
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import org.gradle.api.internal.plugins.DefaultArtifactPublicationSet
-import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.ExtraPropertiesExtension
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.publish.PublishingExtension

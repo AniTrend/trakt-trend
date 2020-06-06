@@ -12,7 +12,7 @@ buildscript {
         classpath(Libraries.Google.Services.googleServices)
         classpath(Libraries.Google.Firebase.Crashlytics.Gradle.plugin)
 
-        classpath(Libraries.Kotlin.Gradle.plugin)
+        classpath(Libraries.JetBrains.Kotlin.Gradle.plugin)
         classpath(Libraries.AndroidX.Navigation.safeArgsGradlePlugin)
     }
 }

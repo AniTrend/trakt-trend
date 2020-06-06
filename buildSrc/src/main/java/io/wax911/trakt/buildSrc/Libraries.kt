@@ -149,7 +149,12 @@ object Libraries {
             const val core = "androidx.test:core:$version"
             const val runner = "androidx.test:runner:$version"
             const val rules = "androidx.test:rules:$version"
-
+			
+			object Espresso {
+				private const val version = "3.3.0-rc01"
+				const val core = "androidx.test.espresso:espresso-core:$version"
+			}
+			
             object Extension {
                 private const val version = "1.1.1"
                 const val junit = "androidx.test.ext:junit:$version"
@@ -195,13 +200,6 @@ object Libraries {
         const val video = "io.coil-kt:coil-video:$version"
     }
 
-    object Coroutines {
-        private const val version = "1.3.7"
-        const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
-        const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
-        const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version"
-    }
-
     @Deprecated("Use Google.Firebase.Crashlytics instead")
     object Fabric {
 
@@ -245,6 +243,35 @@ object Libraries {
         }
     }
 
+    
+    object JetBrains {
+		object Coroutines {
+			private const val version = "1.3.7"
+			const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
+			const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
+			const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version"
+		}
+		
+		object Dokka {
+			private const val version = "0.10.1"
+			const val gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:$version"
+		}
+		
+		object Kotlin {
+			private const val version = "1.3.72"
+			const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
+			const val reflect = "org.jetbrains.kotlin:kotlin-reflect:$version"
+			
+			object Gradle {
+				const val plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
+			}
+			
+			object Android {
+				const val extensions = "org.jetbrains.kotlin:kotlin-android-extensions:$version"
+			}
+		}
+	}
+    
     object Koin {
         private const val version = "2.1.5"
         const val core = "org.koin:koin-core:$version"
@@ -255,20 +282,6 @@ object Libraries {
             const val scope = "org.koin:koin-androidx-scope:$version"
             const val fragment = "org.koin:koin-androidx-fragment:$version"
             const val viewmodel = "org.koin:koin-androidx-viewmodel:$version"
-        }
-    }
-
-    object Kotlin {
-        private const val version = "1.3.72"
-        const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
-        const val reflect = "org.jetbrains.kotlin:kotlin-reflect:$version"
-
-        object Gradle {
-            const val plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
-        }
-
-        object Android {
-            const val extensions = "org.jetbrains.kotlin:kotlin-android-extensions:$version"
         }
     }
 
