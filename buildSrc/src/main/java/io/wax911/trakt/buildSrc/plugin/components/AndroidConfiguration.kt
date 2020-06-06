@@ -72,7 +72,6 @@ internal fun Project.configureAndroid(): Unit = baseExtension().run {
     }
 
     testOptions {
-        unitTests.isIncludeAndroidResources = true
         unitTests.isReturnDefaultValues = true
     }
 
