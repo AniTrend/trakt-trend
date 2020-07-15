@@ -14,13 +14,21 @@ dependencies {
     implementation(Libraries.AndroidX.Core.coreKtx)
     implementation(Libraries.AndroidX.Work.runtimeKtx)
     implementation(Libraries.AndroidX.Fragment.fragmentKtx)
+    implementation(Libraries.AndroidX.Activity.activityKtx)
+    implementation(Libraries.AndroidX.ContraintLayout.constraintLayout)
+    implementation(Libraries.AndroidX.SwipeRefresh.swipeRefreshLayout)
+
+    implementation(Libraries.BlueLineLabs.Conductor.conductor)
+    implementation(Libraries.BlueLineLabs.Conductor.lifecycle)
+    implementation(Libraries.BlueLineLabs.Conductor.transitions)
+    implementation(Libraries.BlueLineLabs.Conductor.viewPage)
 
     /** Timber Trees */
     implementation(Libraries.treessence)
 
     // debugImplementation because LeakCanary should only run in debug builds.
     debugImplementation(Libraries.Square.LeakCanary.leakCanary)
-    debugImplementation(Libraries.treessence)
+    debugImplementation(Libraries.debugDb)
 }
 
 if (file("google-services.json").exists()) {
