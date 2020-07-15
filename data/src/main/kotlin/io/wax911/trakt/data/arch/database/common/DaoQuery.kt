@@ -7,7 +7,7 @@ import androidx.room.Update
 import androidx.room.Delete
 
 @Dao
-interface DaoQuery<T> {
+internal interface DaoQuery<T> {
 
     /**
      * Inserts a new item into the database ignoring items with the same primary key,
