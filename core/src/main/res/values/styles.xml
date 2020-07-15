@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="SupportTheme.AppTheme">
+        <item name="android:windowBackground">@color/primaryColor</item>
         <item name="android:windowAnimationStyle">@style/SupportTheme.WindowAnimationStyle</item>
         <!-- Layout preview complains without this :S -->
         <item name="coordinatorLayoutStyle">@style/Widget.Support.CoordinatorLayout</item>
