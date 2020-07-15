@@ -9,6 +9,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
+import co.anitrend.arch.extension.ext.LAZY_MODE_UNSAFE
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import io.wax911.trakt.R
@@ -26,8 +27,10 @@ import timber.log.Timber
 
 class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private val bottomDrawerBehavior: BottomSheetBehavior<FrameLayout>?
-        get() = BottomSheetBehavior.from(bottomNavigationDrawer)
+    private val bottomDrawerBehavior
+            by lazy(LAZY_MODE_UNSAFE) {
+                BottomSheetBehavior.from(bottomNavigationDrawer)
+            }
 
     @IdRes
     private var selectedItem: Int = R.id.nav_popular_series
@@ -39,15 +42,14 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(bottomAppBar)
-        bottomDrawerBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomDrawerBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     override fun initializeComponents(savedInstanceState: Bundle?) {
-        bottomAppBar.apply {
-            setNavigationOnClickListener {
-                bottomDrawerBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-            }
+        bottomAppBar.setNavigationOnClickListener {
+            bottomDrawerBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
+
         bottomNavigationView.apply {
             setNavigationItemSelectedListener(this@MainScreen)
             setCheckedItem(selectedItem)
@@ -68,12 +70,12 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
     }
 
     override fun onBackPressed() {
-        when (bottomDrawerBehavior?.state) {
-            BottomSheetBehavior.STATE_EXPANDED,
-            BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                bottomDrawerBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
-                return
-            }
+        when (bottomDrawerBehavior.state) {
+            BottomSheetBehavior.STATE_EXPANDED ->
+                bottomDrawerBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+            BottomSheetBehavior.STATE_HALF_EXPANDED,
+            BottomSheetBehavior.STATE_COLLAPSED ->
+                bottomDrawerBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             else -> super.onBackPressed()
         }
     }
@@ -146,7 +148,7 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
         }
 
         bottomAppBar.setTitle(selectedTitle)
-        bottomDrawerBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomDrawerBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         currentFragmentTag = supportFragmentManager.commit(R.id.contentFrame, fragmentItem) {
             // Nothing to do with transaction, no animations or anything like that

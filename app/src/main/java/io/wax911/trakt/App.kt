@@ -1,6 +1,7 @@
 package io.wax911.trakt
 
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import fr.bipi.tressence.file.FileLoggerTree
 import io.wax911.trakt.core.TraktTrendApplication
 import io.wax911.trakt.koin.appModules
@@ -71,6 +72,9 @@ class App : TraktTrendApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        AppCompatDelegate.setDefaultNightMode(
+            AppCompatDelegate.MODE_NIGHT_NO
+        )
         if (BuildConfig.DEBUG)
             createUncaughtExceptionHandler()
     }
