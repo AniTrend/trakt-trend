@@ -6,4 +6,5 @@ plugins {
 
 dependencies {
     implementation(Libraries.AndroidX.Collection.collectionKtx)
+    implementation(Libraries.BlueLineLabs.Conductor.conductor)
 }
