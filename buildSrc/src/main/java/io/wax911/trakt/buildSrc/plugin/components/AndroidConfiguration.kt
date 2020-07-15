@@ -61,6 +61,7 @@ internal fun Project.configureAndroid(): Unit = baseExtension().run {
         exclude("META-INF/NOTICE.txt")
         exclude("META-INF/LICENSE")
         exclude("META-INF/LICENSE.txt")
+        exclude("META-INF/*kotlin_module")
     }
 
     sourceSets {
