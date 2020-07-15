@@ -22,12 +22,26 @@ private fun Project.applyPlatformDependencies() {
     dependencies.add("implementation", Libraries.AniTrend.Arch.domain)
     dependencies.add("implementation", Libraries.AniTrend.Arch.recycler)
 
-    dependencies.add("implementation", Libraries.AndroidX.Collection.collectionKtx)
-
-    dependencies.add("implementation", Libraries.AndroidX.Paging.runtime)
+    dependencies.add("implementation", Libraries.AndroidX.Core.coreKtx)
+    dependencies.add("implementation", Libraries.AndroidX.Work.runtimeKtx)
     dependencies.add("implementation", Libraries.AndroidX.Paging.runtimeKtx)
+    dependencies.add("implementation", Libraries.AndroidX.Activity.activityKtx)
+    dependencies.add("implementation", Libraries.AndroidX.Fragment.fragmentKtx)
+    dependencies.add("implementation", Libraries.AndroidX.StartUp.startUpRuntime)
+    dependencies.add("implementation", Libraries.AndroidX.Collection.collectionKtx)
+    dependencies.add("implementation", Libraries.AndroidX.SwipeRefresh.swipeRefreshLayout)
+    dependencies.add("implementation", Libraries.AndroidX.ContraintLayout.constraintLayout)
+
+    dependencies.add("implementation", Libraries.BlueLineLabs.Conductor.conductor)
+    dependencies.add("implementation", Libraries.BlueLineLabs.Conductor.lifecycle)
+    dependencies.add("implementation", Libraries.BlueLineLabs.Conductor.transitions)
+    dependencies.add("implementation", Libraries.BlueLineLabs.Conductor.viewPage)
+
+    dependencies.add("implementation", Libraries.Tinder.StateMachine.stateMachine)
 
     dependencies.add("implementation", Libraries.Google.Material.material)
+
+    dependencies.add("implementation", Libraries.Coil.coil)
 
     dependencies.add("implementation", project(":$core"))
     dependencies.add("implementation", project(":$data"))
