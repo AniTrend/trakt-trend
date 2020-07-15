@@ -9,7 +9,7 @@ repositories {
 }
 
 val kotlinVersion = "1.3.72"
-val buildToolsVersion = "4.0.0"
+val buildToolsVersion = "4.0.1"
 
 dependencies {
     /* Depend on the android gradle plugin, since we want to access it in our plugin */
