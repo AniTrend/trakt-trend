@@ -4,7 +4,7 @@ plugins {
     id("io.wax911.trakt.plugin")
 }
 
-apply(from = "../common-app.gradle")
+//apply(from = "../common-app.gradle")
 
 dependencies {
     implementation(project(":shared-discover"))
