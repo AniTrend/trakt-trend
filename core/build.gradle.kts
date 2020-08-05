@@ -12,8 +12,5 @@ dependencies {
     implementation(Libraries.AndroidX.Work.runtimeKtx)
     implementation(Libraries.AndroidX.Fragment.fragmentKtx)
 
-    implementation(Libraries.BlueLineLabs.Conductor.conductor)
-    implementation(Libraries.BlueLineLabs.Conductor.lifecycle)
-
     implementation(Libraries.Coil.coil)
 }
