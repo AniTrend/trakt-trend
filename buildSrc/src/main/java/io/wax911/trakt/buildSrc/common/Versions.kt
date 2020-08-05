@@ -6,8 +6,8 @@ object Versions {
     const val targetSdk = 29
     const val minSdk = 21
 
-    const val versionCode = 10302
-    const val versionName = "0.3.0-alpha02"
+    const val versionCode = 10303
+    const val versionName = "0.3.0-alpha03"
 
     const val mockk = "1.10.0"
     const val junit = "4.13"
@@ -16,7 +16,7 @@ object Versions {
     const val threeTenBp = "1.2.4"
 
     const val tmdb = "2.2.0"
-    const val trakt = "6.5.0"
+    const val trakt = "6.6.0"
 
     const val debugDB = "1.0.6"
     const val treesSence = "0.3.2"
