@@ -16,7 +16,7 @@ object Versions {
     const val threeTenBp = "1.2.4"
 
     const val tmdb = "2.2.0"
-    const val trakt = "6.5.0"
+    const val trakt = "6.6.0"
 
     const val debugDB = "1.0.6"
     const val treesSence = "0.3.2"
