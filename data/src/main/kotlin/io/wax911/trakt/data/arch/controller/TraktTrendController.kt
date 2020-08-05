@@ -1,10 +1,7 @@
 package io.wax911.trakt.data.arch.controller
 
-import androidx.lifecycle.MutableLiveData
-import androidx.paging.PagingRequestHelper
-import co.anitrend.arch.data.common.ISupportPagingResponse
 import co.anitrend.arch.data.common.ISupportResponse
-import co.anitrend.arch.domain.entities.NetworkState
+import co.anitrend.arch.data.request.callback.RequestCallback
 import co.anitrend.arch.extension.dispatchers.SupportDispatchers
 import io.wax911.trakt.data.arch.controller.strategy.ControllerStrategy
 import io.wax911.trakt.data.arch.extensions.fetchBodyWithRetry
@@ -16,21 +13,16 @@ internal class TraktTrendController<S, D> private constructor(
     private val responseMapper: TraktTrendMapper<S, D>,
     private val strategy: ControllerStrategy<D>,
     private val dispatchers: SupportDispatchers
-) : ISupportResponse<Call<S>, D>, ISupportPagingResponse<Call<S>> {
+) : ISupportResponse<Call<S>, D> {
 
     /**
-     * Response handler for coroutine contexts which need to observe [NetworkState]
+     * Response handler for coroutine contexts, mainly for paging
      *
      * @param resource awaiting execution
-     * @param networkState for the deferred result
-     *
-     * @return resource fetched if present
+     * @param requestCallback optional paging request callback
      */
-    override suspend fun invoke(
-        resource: Call<S>,
-        networkState: MutableLiveData<NetworkState>
-    ): D? {
-        return strategy({
+    override suspend fun invoke(resource: Call<S>, requestCallback: RequestCallback): D? {
+        return strategy(requestCallback) {
             val responseBody = withContext(dispatchers.io) {
                 resource.fetchBodyWithRetry()
             }
@@ -41,30 +33,25 @@ internal class TraktTrendController<S, D> private constructor(
                 responseMapper.onResponseDatabaseInsert(mapped)
             }
             mapped
-        }, networkState)
+        }
     }
 
     /**
-     * Response handler for coroutine contexts, mainly for paging
+     * Response handler for coroutine contexts
      *
      * @param resource awaiting execution
-     * @param pagingRequestHelper optional paging request callback
      */
-    override suspend fun invoke(
-        resource: Call<S>,
-        pagingRequestHelper: PagingRequestHelper.Request.Callback
-    ) {
-        strategy({
-            val responseBody = withContext(dispatchers.io) {
-                resource.fetchBodyWithRetry()
-            }
-            val mapped = withContext(dispatchers.computation) {
-                responseMapper.onResponseMapFrom(responseBody)
-            }
-            withContext(dispatchers.io) {
-                responseMapper.onResponseDatabaseInsert(mapped)
-            }
-        }, pagingRequestHelper)
+    suspend operator fun invoke(resource: Call<S>): D? {
+        val responseBody = withContext(dispatchers.io) {
+            resource.fetchBodyWithRetry()
+        }
+        val mapped = withContext(dispatchers.computation) {
+            responseMapper.onResponseMapFrom(responseBody)
+        }
+        withContext(dispatchers.io) {
+            responseMapper.onResponseDatabaseInsert(mapped)
+        }
+        return mapped
     }
 
 

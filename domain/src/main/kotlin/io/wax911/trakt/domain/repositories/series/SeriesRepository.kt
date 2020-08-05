@@ -1,9 +1,8 @@
 package io.wax911.trakt.domain.repositories.series
 
-import co.anitrend.arch.domain.common.IUserInterfaceState
-import io.wax911.trakt.domain.models.TimePeriod
+import co.anitrend.arch.domain.state.UiState
 
-interface SeriesRepository<R: IUserInterfaceState<*>> {
+interface SeriesRepository<R: UiState<*>> {
 
     ///**
     // * Returns the most anticipated shows based on the number of lists a show appears on.

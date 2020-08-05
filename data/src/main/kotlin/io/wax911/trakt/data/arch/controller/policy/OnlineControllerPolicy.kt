@@ -1,7 +1,8 @@
 package io.wax911.trakt.data.arch.controller.policy
 
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.PagingRequestHelper
+import co.anitrend.arch.data.request.callback.RequestCallback
+import co.anitrend.arch.data.request.error.RequestError
 import co.anitrend.arch.domain.entities.NetworkState
 import co.anitrend.arch.extension.network.SupportConnectivity
 import io.wax911.trakt.data.arch.controller.strategy.ControllerStrategy
@@ -18,27 +19,37 @@ internal class OnlineControllerPolicy<D> private constructor(
      * Execute a paging task under an implementation strategy
      *
      * @param block what will be executed
-     * @param pagingRequestHelper paging event emitter
+     * @param requestCallback paging event emitter
      */
     override suspend fun invoke(
-        block: suspend () -> Unit,
-        pagingRequestHelper: PagingRequestHelper.Request.Callback
-    ) {
-        if (connectivity.isConnected) {
-            runCatching {
-                block()
-                pagingRequestHelper.recordSuccess()
-            }.exceptionOrNull()?.also { e ->
-                e.printStackTrace()
-                Timber.tag(moduleTag).e(e)
-                pagingRequestHelper.recordFailure(e)
-            }
-        }
-        else {
-            pagingRequestHelper.recordFailure(
-                Throwable("Please check your internet connection")
+        requestCallback: RequestCallback,
+        block: suspend () -> D?
+    ): D? {
+        if (!connectivity.isConnected) {
+            requestCallback.recordFailure(
+                RequestError(
+                    "No internet connection",
+                    "Please check your internet connection",
+                    null
+                )
             )
+            return null
         }
+
+        return runCatching {
+            val result = block()
+            requestCallback.recordSuccess()
+            result
+        }.onFailure { e ->
+            Timber.tag(moduleTag).e(e)
+            requestCallback.recordFailure(
+                RequestError(
+                    "Unexpected error encountered \uD83E\uDD2D",
+                    e.message,
+                    e.cause
+                )
+            )
+        }.getOrNull()
     }
 
     /**
@@ -48,8 +59,8 @@ internal class OnlineControllerPolicy<D> private constructor(
      * @param networkState network state event emitter
      */
     override suspend fun invoke(
-        block: suspend () -> D?,
-        networkState: MutableLiveData<NetworkState>
+        networkState: MutableLiveData<NetworkState>,
+        block: suspend () -> D?
     ): D? {
         if (connectivity.isConnected) {
             return runCatching{

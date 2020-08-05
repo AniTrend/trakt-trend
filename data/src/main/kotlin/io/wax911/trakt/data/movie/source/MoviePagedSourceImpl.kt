@@ -1,12 +1,12 @@
 package io.wax911.trakt.data.movie.source
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
 import androidx.paging.DataSource
 import androidx.paging.PagedList
-import androidx.paging.PagingRequestHelper
 import androidx.paging.toLiveData
-import co.anitrend.arch.data.source.contract.ISourceObservable
-import co.anitrend.arch.data.util.SupportDataKeyStore
+import co.anitrend.arch.data.request.callback.RequestCallback
+import co.anitrend.arch.data.util.PAGING_CONFIGURATION
 import co.anitrend.arch.extension.dispatchers.SupportDispatchers
 import co.anitrend.arch.extension.network.SupportConnectivity
 import com.uwetrottmann.trakt5.enums.Extended
@@ -22,6 +22,8 @@ import io.wax911.trakt.domain.entities.image.enums.ShowImageType
 import io.wax911.trakt.domain.models.MediaType
 import io.wax911.trakt.domain.entities.shared.ShowWithImage
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 internal class MoviePagedSourceImpl(
     private val localSource: ShowDao,
@@ -31,7 +33,7 @@ internal class MoviePagedSourceImpl(
     dispatchers: SupportDispatchers
 )  : MoviePagedSource(dispatchers) {
 
-    override suspend fun getPopularMovies(callback: PagingRequestHelper.Request.Callback) {
+    override suspend fun execute(callback: RequestCallback) {
         val call =
             remoteSource.popular(
                 supportPagingHelper.page,
@@ -50,42 +52,36 @@ internal class MoviePagedSourceImpl(
         controller(call, callback)
     }
 
-    override val popularObservable =
-        object : ISourceObservable<Nothing?, PagedList<ISharedMediaWithImage>> {
-            /**
-             * Returns the appropriate observable which we will monitor for updates,
-             * common implementation may include but not limited to returning
-             * data source live data for a database
-             *
-             * @param parameter to use when executing
-             */
-            override fun invoke(parameter: Nothing?): LiveData<PagedList<ISharedMediaWithImage>> {
-                val dataSourceFactory = localSource.getPopular(MediaType.MOVIE)
+    override fun invoke() = liveData {
+        val dataSourceFactory = localSource.getPopular(MediaType.MOVIE)
 
-                val result: DataSource.Factory<Int, ISharedMediaWithImage> = dataSourceFactory.map {
-                    val show = ShowEntity.transform(it)
+        val result: DataSource.Factory<Int, ISharedMediaWithImage> = dataSourceFactory.map {
+            val show = ShowEntity.transform(it)
 
-                    ShowWithImage(
-                        media = show,
-                        image = TmdbImage(
-                            type = MediaType.MOVIE,
-                            imageType = ShowImageType.POSTER,
-                            id = it.tmdbId ?: 0
-                        )
-                    )
-                }
-
-                return result.toLiveData(
-                    config = SupportDataKeyStore.PAGING_CONFIGURATION,
-                    boundaryCallback = this@MoviePagedSourceImpl
+            ShowWithImage(
+                media = show,
+                image = TmdbImage(
+                    type = MediaType.MOVIE,
+                    imageType = ShowImageType.POSTER,
+                    id = it.tmdbId ?: 0
                 )
-            }
+            )
         }
+
+        emitSource(
+            result.toLiveData(
+                config = PAGING_CONFIGURATION,
+                boundaryCallback = this@MoviePagedSourceImpl
+            )
+        )
+    }
 
     /**
      * Clears data sources (databases, preferences, e.t.c)
      */
-    override suspend fun clearDataSource() {
-        localSource.deleteAll(MediaType.MOVIE)
+    override suspend fun clearDataSource(context: CoroutineDispatcher) {
+        withContext(context) {
+            localSource.deleteAll(MediaType.MOVIE)
+        }
     }
 }

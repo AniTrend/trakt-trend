@@ -52,7 +52,7 @@ private val networkModule = module {
     }
     factory {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
-        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.HEADERS
         httpLoggingInterceptor
     }
     single<TraktV2> {

@@ -1,9 +1,8 @@
 package io.wax911.trakt.domain.repositories.film
 
-import co.anitrend.arch.domain.common.IUserInterfaceState
-import io.wax911.trakt.domain.models.TimePeriod
+import co.anitrend.arch.domain.state.UiState
 
-interface FilmRepository<R: IUserInterfaceState<*>> {
+interface FilmRepository<R: UiState<*>> {
 
     ///**
     // * Returns the most anticipated movies based on the number of lists a show appears on.

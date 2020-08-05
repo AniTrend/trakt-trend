@@ -3,13 +3,13 @@ package io.wax911.trakt.view
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
-import co.anitrend.arch.extension.ext.LAZY_MODE_UNSAFE
+import androidx.lifecycle.lifecycleScope
+import co.anitrend.arch.extension.ext.UNSAFE
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import io.wax911.trakt.R
@@ -28,7 +28,7 @@ import timber.log.Timber
 class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val bottomDrawerBehavior
-            by lazy(LAZY_MODE_UNSAFE) {
+            by lazy(UNSAFE) {
                 BottomSheetBehavior.from(bottomNavigationDrawer)
             }
 
@@ -106,7 +106,7 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
         return true
     }
 
-    private suspend fun onNavigate(@IdRes menu: Int) {
+    private fun onNavigate(@IdRes menu: Int) {
         var fragmentItem: FragmentItem<Fragment>? = null
         when (menu) {
             R.id.nav_theme -> {
@@ -156,7 +156,7 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
     }
 
     private fun onNavigateToTarget(@IdRes menu: Int) {
-        launch {
+        lifecycleScope.launch {
             runCatching {
                 onNavigate(menu)
             }.onFailure {

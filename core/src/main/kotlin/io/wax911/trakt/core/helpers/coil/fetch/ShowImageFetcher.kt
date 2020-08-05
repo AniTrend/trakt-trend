@@ -15,6 +15,8 @@ import io.wax911.trakt.domain.entities.image.contract.ITmdbImage
 import io.wax911.trakt.domain.entities.image.enums.ShowImageType
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
@@ -28,37 +30,35 @@ class ShowImageFetcher(
     private val mapper: MeasuredMapper<IShowImage, HttpUrl>
 ) : Fetcher<ITmdbImage> {
 
-    private suspend fun fetchImagesFromSource(data: ITmdbImage, size: Size): HttpUrl? {
+    private suspend fun fetchImagesFromSource(data: ITmdbImage, size: Size): HttpUrl {
         return runCatching {
-            val images= tmdbSource.get(data)
+            val images = tmdbSource(data)
             Timber.tag(moduleTag).v(
-                "Images retrieved from tmdb source for item: ${data.id} -> ${images.size}"
+                "Images retrieved from tmdb source for item: ${data.id} -> $size"
             )
             val imageConfig = ImageConfig(images)
-            val poster = when(data.imageType) {
+            val poster = when (data.imageType) {
                 ShowImageType.BACKDROP -> imageConfig.bestBackDropImage()
                 ShowImageType.POSTER -> imageConfig.bestPosterImage()
                 ShowImageType.LOGO -> imageConfig.bestLogoImage()
             }
-
             Timber.tag(moduleTag).v("Best image selected: ${poster?.path}")
             poster?.let { mapper.map(poster, size) }
-        }.getOrElse {
+        }.onFailure {
             Timber.tag(moduleTag).e(it)
-            null
-        }
+        }.getOrNull() ?: FALLBACK_URL
     }
 
     private suspend fun fetchDataSourceUsing(httpUrl: HttpUrl): BufferedSource {
-        val request = Request.Builder()
-            .get().url(httpUrl).build()
+        val request = Request.Builder().get().url(httpUrl).build()
         val call = client.newCall(request)
         val source = GlobalScope.async {
             @Suppress("BlockingMethodInNonBlockingContext")
             val response = call.execute()
             response.body?.source()
         }
-        // this is dangerous :smug:
+        // Coil should handle exceptions internally and
+        // prevent them from leaking outside this scope (this is dangerous :smug:)
         return source.await()!!
     }
 
@@ -76,10 +76,9 @@ class ShowImageFetcher(
         size: Size,
         options: Options
     ): FetchResult {
-        val url = fetchImagesFromSource(data, size) ?: FALLBACK_URL
-        val source = fetchDataSourceUsing(url)
+        val url = fetchImagesFromSource(data, size)
         return SourceResult(
-            source = source,
+            source = fetchDataSourceUsing(url),
             mimeType = "image/*",
             dataSource = DataSource.NETWORK
         )

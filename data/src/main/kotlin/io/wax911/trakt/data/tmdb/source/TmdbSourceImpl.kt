@@ -1,8 +1,5 @@
 package io.wax911.trakt.data.tmdb.source
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
-import co.anitrend.arch.data.source.contract.ISourceObservable
 import co.anitrend.arch.extension.dispatchers.SupportDispatchers
 import co.anitrend.arch.extension.network.SupportConnectivity
 import com.uwetrottmann.tmdb2.entities.AppendToResponse
@@ -19,8 +16,9 @@ import io.wax911.trakt.data.tmdb.source.contract.TmdbSource
 import io.wax911.trakt.domain.entities.image.contract.IShowImage
 import io.wax911.trakt.domain.entities.image.contract.ITmdbImage
 import io.wax911.trakt.domain.models.MediaType
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.map
-import timber.log.Timber
+import kotlinx.coroutines.withContext
 
 internal class TmdbSourceImpl(
     private val localSource: TmdbDao,
@@ -32,47 +30,24 @@ internal class TmdbSourceImpl(
     dispatchers: SupportDispatchers
 ) : TmdbSource(dispatchers) {
 
-    override val observable =
-        object : ISourceObservable<ITmdbImage, List<IShowImage>> {
-            /**
-             * Returns the appropriate observable which we will monitor for updates,
-             * common implementation may include but not limited to returning
-             * data source live data for a database
-             *
-             * @param parameter to use when executing
-             */
-            override fun invoke(parameter: ITmdbImage): LiveData<List<IShowImage>> {
-                return localSource.getByIdFlow(parameter.id)
-                    .map {
-                        it.mapTo(mutableListOf()) { entity ->
-                            TmdbImageEntity.transform(entity)
-                        }
-                    }.asLiveData(coroutineContext)
+    override fun imagesFromCache(tmdb: ITmdbImage) =
+        localSource.getByIdFlow(tmdb.id)
+            .map {
+                it.mapTo(mutableListOf()) { entity ->
+                    TmdbImageEntity.transform(entity)
+                }
             }
-        }
 
-    override suspend fun findMatching(tmdb: ITmdbImage) {
-        when (tmdb.type) {
-            MediaType.MOVIE -> findMovieMatching(tmdb.id)
-            MediaType.SERIES -> findShowMatching(tmdb.id)
-        }
-    }
 
-    override suspend fun get(tmdb: ITmdbImage): List<IShowImage> {
-        val items = localSource.getById(tmdb.id)
-        return if (items.isNotEmpty()) {
-            items.map {
+    override suspend fun findMatching(tmdb: ITmdbImage): List<IShowImage> {
+        val cachedImages = localSource.getById(tmdb.id)
+        if (cachedImages.isNotEmpty())
+            return cachedImages.map {
                 TmdbImageEntity.transform(it)
             }
-        }
-        else {
-            val images = runCatching{
-                findShowMatching(tmdb.id)
-            }.getOrElse {
-                Timber.tag(moduleTag).e(it)
-                emptyList()
-            }
-            images
+        return when (tmdb.type) {
+            MediaType.MOVIE -> findMovieMatching(tmdb.id)
+            else -> findShowMatching(tmdb.id)
         }
     }
 
@@ -93,7 +68,7 @@ internal class TmdbSourceImpl(
                 dispatchers
             )
 
-        val imageEntities = controller(call, networkState)
+        val imageEntities = controller(call)
 
         val result = mutableListOf<IShowImage>()
         imageEntities?.mapTo(result) { entity ->
@@ -119,7 +94,7 @@ internal class TmdbSourceImpl(
                 dispatchers
             )
 
-        val imageEntities = controller(call, networkState)
+        val imageEntities = controller(call)
 
         val result = mutableListOf<IShowImage>()
         imageEntities?.mapTo(result) { entity ->
@@ -131,7 +106,9 @@ internal class TmdbSourceImpl(
     /**
      * Clears data sources (databases, preferences, e.t.c)
      */
-    override suspend fun clearDataSource() {
-        localSource.deleteAll()
+    override suspend fun clearDataSource(context: CoroutineDispatcher) {
+        withContext(context) {
+            localSource.deleteAll()
+        }
     }
 }

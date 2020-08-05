@@ -1,7 +1,8 @@
 package io.wax911.trakt.data.arch.common
 
 import androidx.paging.PagedList
-import androidx.paging.PagingRequestHelper
+import co.anitrend.arch.data.request.callback.RequestCallback
+import co.anitrend.arch.data.request.contract.IRequestHelper
 import co.anitrend.arch.data.source.paging.SupportPagingDataSource
 import co.anitrend.arch.extension.dispatchers.SupportDispatchers
 import kotlinx.coroutines.launch
@@ -15,16 +16,18 @@ internal abstract class TraktPagedSource<T>(
     supportDispatchers: SupportDispatchers
 ) : SupportPagingDataSource<T>(supportDispatchers) {
 
-    protected lateinit var executionTarget: suspend (PagingRequestHelper.Request.Callback) -> Unit
+    protected abstract suspend fun execute(callback: RequestCallback)
 
     /**
      * Called when zero items are returned from an initial load of the PagedList's data source.
      */
     override fun onZeroItemsLoaded() {
-        pagingRequestHelper.runIfNotRunning(
-            PagingRequestHelper.RequestType.INITIAL
-        ) {
-            launch { executionTarget(it) }
+        launch {
+            requestHelper.runIfNotRunning(
+                IRequestHelper.RequestType.INITIAL
+            ) {
+                execute(it)
+            }
         }
     }
 
@@ -37,11 +40,13 @@ internal abstract class TraktPagedSource<T>(
      * @param itemAtEnd The first item of PagedList
      */
     override fun onItemAtEndLoaded(itemAtEnd: T) {
-        pagingRequestHelper.runIfNotRunning(
-            PagingRequestHelper.RequestType.AFTER
-        ) {
-            supportPagingHelper.onPageNext()
-            launch { executionTarget(it) }
+        launch {
+            requestHelper.runIfNotRunning(
+                IRequestHelper.RequestType.AFTER
+            ) {
+                supportPagingHelper.onPageNext()
+                execute(it)
+            }
         }
     }
 }

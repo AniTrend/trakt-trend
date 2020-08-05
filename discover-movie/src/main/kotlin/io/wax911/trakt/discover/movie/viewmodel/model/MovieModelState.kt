@@ -2,10 +2,11 @@ package io.wax911.trakt.discover.movie.viewmodel.model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.Transformations.switchMap
+import androidx.lifecycle.asLiveData
 import androidx.paging.PagedList
 import co.anitrend.arch.core.model.ISupportViewModelState
-import co.anitrend.arch.data.model.UserInterfaceState
+import co.anitrend.arch.data.state.DataState
 import co.anitrend.arch.domain.entities.NetworkState
 import io.wax911.trakt.data.movie.usecase.FilmUseCaseType
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
@@ -15,16 +16,16 @@ class MovieModelState(
     private val useCase: FilmUseCaseType
 ) : ISupportViewModelState<PagedList<ISharedMediaWithImage>> {
 
-    private val useCaseResult = MutableLiveData<UserInterfaceState<PagedList<ISharedMediaWithImage>>>()
+    private val useCaseResult = MutableLiveData<DataState<PagedList<ISharedMediaWithImage>>>()
 
     override val model =
-        Transformations.switchMap(useCaseResult) { it.model }
+        switchMap(useCaseResult) { it.model }
 
     override val networkState: LiveData<NetworkState>? =
-        Transformations.switchMap(useCaseResult) { it.networkState }
+        switchMap(useCaseResult) { it.networkState.asLiveData() }
 
     override val refreshState: LiveData<NetworkState>? =
-        Transformations.switchMap(useCaseResult) { it.refreshState }
+        switchMap(useCaseResult) { it.refreshState.asLiveData() }
 
     operator fun invoke(payload: MediaPayload) {
         val result = useCase(payload)
@@ -34,7 +35,7 @@ class MovieModelState(
     /**
      * Triggers use case to perform a retry operation
      */
-    override fun retry() {
+    override suspend fun retry() {
         val uiModel = useCaseResult.value
         uiModel?.retry?.invoke()
     }
@@ -42,7 +43,7 @@ class MovieModelState(
     /**
      * Triggers use case to perform refresh operation
      */
-    override fun refresh() {
+    override suspend fun refresh() {
         val uiModel = useCaseResult.value
         uiModel?.refresh?.invoke()
     }

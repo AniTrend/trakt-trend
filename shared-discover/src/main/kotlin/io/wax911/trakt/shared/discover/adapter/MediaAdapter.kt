@@ -7,19 +7,16 @@ import androidx.recyclerview.widget.RecyclerView
 import co.anitrend.arch.core.model.IStateLayoutConfig
 import co.anitrend.arch.recycler.action.contract.ISupportSelectionMode
 import co.anitrend.arch.recycler.adapter.SupportPagedListAdapter
-import co.anitrend.arch.recycler.adapter.contract.ISupportAdapter.Companion.FULL_SPAN_SIZE
 import co.anitrend.arch.recycler.model.contract.IRecyclerItem
-import co.anitrend.arch.recycler.model.contract.IRecyclerItemSpan.Companion.INVALID_SPAN_COUNT
 import co.anitrend.arch.theme.animator.ScaleAnimator
-import co.anitrend.arch.theme.animator.contract.ISupportAnimator
+import co.anitrend.arch.theme.animator.contract.AbstractAnimator
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
 import io.wax911.trakt.shared.discover.model.MediaItem
-import timber.log.Timber
 
 class MediaAdapter(
     override val resources: Resources,
     override val stateConfiguration: IStateLayoutConfig,
-    override var customSupportAnimator: ISupportAnimator? = ScaleAnimator(),
+    override var customSupportAnimator: AbstractAnimator? = ScaleAnimator(),
     override val mapper: (ISharedMediaWithImage?) -> IRecyclerItem = { MediaItem(it) }
 ) : SupportPagedListAdapter<ISharedMediaWithImage>(MediaItem.DIFFER) {
 

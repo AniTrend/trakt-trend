@@ -1,7 +1,8 @@
 package io.wax911.trakt.data.tmdb.repository
 
-import co.anitrend.arch.data.model.UserInterfaceState.Companion.create
+import androidx.lifecycle.liveData
 import co.anitrend.arch.data.repository.SupportRepository
+import co.anitrend.arch.data.state.DataState.Companion.create
 import io.wax911.trakt.data.tmdb.source.contract.TmdbSource
 import io.wax911.trakt.domain.entities.image.contract.ITmdbImage
 
@@ -11,6 +12,8 @@ class TmdbRepository(
 
     fun images(tmdbId: ITmdbImage) =
         source.create(
-            model = source(tmdbId)
+            model = liveData {
+                emit(source.invoke(tmdbId))
+            }
         )
 }

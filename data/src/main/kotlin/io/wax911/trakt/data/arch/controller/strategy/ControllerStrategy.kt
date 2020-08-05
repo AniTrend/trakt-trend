@@ -1,7 +1,7 @@
 package io.wax911.trakt.data.arch.controller.strategy
 
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.PagingRequestHelper
+import co.anitrend.arch.data.request.callback.RequestCallback
 import co.anitrend.arch.domain.entities.NetworkState
 
 internal abstract class ControllerStrategy<D> {
@@ -11,13 +11,13 @@ internal abstract class ControllerStrategy<D> {
     /**
      * Execute a paging task under an implementation strategy
      *
-     * @param block what will be executed
-     * @param pagingRequestHelper paging event emitter
+     * @param block What will be executed
+     * @param requestCallback Event emitter
      */
     internal abstract suspend operator fun invoke(
-        block: suspend () -> Unit,
-        pagingRequestHelper: PagingRequestHelper.Request.Callback
-    )
+        requestCallback: RequestCallback,
+        block: suspend () -> D?
+    ): D?
 
     /**
      * Execute a task under an implementation strategy
@@ -25,8 +25,9 @@ internal abstract class ControllerStrategy<D> {
      * @param block what will be executed
      * @param networkState network state event emitter
      */
+    @Deprecated("Use RequestCallback instead")
     internal abstract suspend operator fun invoke(
-        block: suspend () -> D?,
-        networkState: MutableLiveData<NetworkState>
+        networkState: MutableLiveData<NetworkState>,
+        block: suspend () -> D?
     ): D?
 }

@@ -28,20 +28,17 @@ private val coreModule = module {
 }
 
 private val coilModules = module {
-    single {
-        OkHttpClient.Builder()
-            .cache(
-                CoilUtils.createDefaultCache(
-                    androidApplication()
-                )
-            ).build()
-    }
     factory<MeasuredMapper<IShowImage, HttpUrl>> {
         ShowImageMeasuredMapper()
     }
     factory {
         ShowImageFetcher(
-            client = get(),
+            client = OkHttpClient.Builder()
+                .cache(
+                    CoilUtils.createDefaultCache(
+                        androidApplication()
+                    )
+                ).build(),
             tmdbSource = get(),
             mapper = get()
         )

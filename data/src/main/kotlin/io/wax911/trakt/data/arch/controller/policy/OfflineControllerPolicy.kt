@@ -17,7 +17,8 @@
 package io.wax911.trakt.data.arch.controller.policy
 
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.PagingRequestHelper
+import co.anitrend.arch.data.request.callback.RequestCallback
+import co.anitrend.arch.data.request.error.RequestError
 import co.anitrend.arch.domain.entities.NetworkState
 import io.wax911.trakt.data.arch.controller.strategy.ControllerStrategy
 import timber.log.Timber
@@ -32,22 +33,27 @@ internal class OfflineControllerPolicy<D> private constructor() : ControllerStra
     /**
      * Execute a paging task under an implementation strategy
      *
-     * @param block what will be executed
-     * @param pagingRequestHelper paging event emitter
+     * @param block What will be executed
+     * @param requestCallback Event emitter
      */
     override suspend fun invoke(
-        block: suspend () -> Unit,
-        pagingRequestHelper: PagingRequestHelper.Request.Callback
-    ) {
-        runCatching {
-            block()
-            pagingRequestHelper.recordSuccess()
-        }.exceptionOrNull()?.also { e ->
-            e.printStackTrace()
+        requestCallback: RequestCallback,
+        block: suspend () -> D?
+    ): D? = runCatching {
+            val result = block()
+            requestCallback.recordSuccess()
+            result
+        }.onFailure { e ->
             Timber.tag(moduleTag).e(e)
-            pagingRequestHelper.recordFailure(e)
-        }
-    }
+            requestCallback.recordFailure(
+                RequestError(
+                    "Unexpected error encountered \uD83E\uDD2D",
+                    e.message,
+                    e.cause
+                )
+            )
+        }.getOrNull()
+
 
     /**
      * Execute a task under an implementation strategy
@@ -56,24 +62,22 @@ internal class OfflineControllerPolicy<D> private constructor() : ControllerStra
      * @param networkState network state event emitter
      */
     override suspend fun invoke(
-        block: suspend () -> D?,
-        networkState: MutableLiveData<NetworkState>
+        networkState: MutableLiveData<NetworkState>,
+        block: suspend () -> D?
     ): D? {
         return runCatching{
             networkState.postValue(NetworkState.Loading)
             val result = block()
             networkState.postValue(NetworkState.Success)
             result
-        }.getOrElse {
-            it.printStackTrace()
+        }.onFailure {
             networkState.postValue(
                 NetworkState.Error(
                     heading = it.cause?.message ?: "Unexpected error encountered \uD83E\uDD2D",
                     message = it.message
                 )
             )
-            null
-        }
+        }.getOrNull()
     }
 
     companion object {
