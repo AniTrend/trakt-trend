@@ -18,11 +18,6 @@ dependencies {
     implementation(Libraries.AndroidX.ContraintLayout.constraintLayout)
     implementation(Libraries.AndroidX.SwipeRefresh.swipeRefreshLayout)
 
-    implementation(Libraries.BlueLineLabs.Conductor.conductor)
-    implementation(Libraries.BlueLineLabs.Conductor.lifecycle)
-    implementation(Libraries.BlueLineLabs.Conductor.transitions)
-    implementation(Libraries.BlueLineLabs.Conductor.viewPage)
-
     /** Timber Trees */
     implementation(Libraries.treessence)
 
