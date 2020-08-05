@@ -32,11 +32,6 @@ private fun Project.applyPlatformDependencies() {
     dependencies.add("implementation", Libraries.AndroidX.SwipeRefresh.swipeRefreshLayout)
     dependencies.add("implementation", Libraries.AndroidX.ContraintLayout.constraintLayout)
 
-    dependencies.add("implementation", Libraries.BlueLineLabs.Conductor.conductor)
-    dependencies.add("implementation", Libraries.BlueLineLabs.Conductor.lifecycle)
-    dependencies.add("implementation", Libraries.BlueLineLabs.Conductor.transitions)
-    dependencies.add("implementation", Libraries.BlueLineLabs.Conductor.viewPage)
-
     dependencies.add("implementation", Libraries.Tinder.StateMachine.stateMachine)
 
     dependencies.add("implementation", Libraries.Google.Material.material)
