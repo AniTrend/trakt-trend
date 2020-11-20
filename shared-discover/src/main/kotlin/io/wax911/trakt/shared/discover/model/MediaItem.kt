@@ -19,8 +19,8 @@ import io.wax911.trakt.shared.discover.databinding.AdapterMediaItemBinding
 import kotlinx.coroutines.flow.MutableStateFlow
 
 data class MediaItem(
-    val entity: ISharedMediaWithImage?
-) : RecyclerItem(entity?.media?.id?.toLong()) {
+    val entity: ISharedMediaWithImage
+) : RecyclerItem(entity.media.id.toLong()) {
 
     private var disposable: RequestDisposable? = null
 
@@ -36,10 +36,9 @@ data class MediaItem(
         selectionMode: ISupportSelectionMode<Long>?
     ) {
         val binding = AdapterMediaItemBinding.bind(view)
-        if (entity != null) {
-            disposable = binding.showImage.using(entity.image)
-            binding.showTitle.text = entity.media.title
-        }
+        disposable = binding.showImage.using(entity.image)
+        binding.showTitle.text = entity.media.title
+
         view.setOnClickListener {
             stateFlow.value =
                 DefaultClickableItem(

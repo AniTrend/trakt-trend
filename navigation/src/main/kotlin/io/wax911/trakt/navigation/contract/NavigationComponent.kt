@@ -18,28 +18,33 @@
 package io.wax911.trakt.navigation.contract
 
 import android.content.Context
-import io.wax911.trakt.navigation.extensions.forIntent
+import android.content.Intent
+import android.os.Parcelable
+import org.koin.core.component.KoinApiExtension
+import org.koin.core.component.KoinComponent
+import timber.log.Timber
 
 /**
  * Intermediate construct for navigation components
- *
- * @param className specific class name for component
- * @param packageName specific package name for the target class
- * excluding the application package name
  */
-abstract class NavigationComponent(
-    override val className: String,
-    override val packageName: String
-) : INavigationRouter, INavigationTarget {
+@OptIn(KoinApiExtension::class)
+abstract class NavigationComponent : INavigationRouter, KoinComponent {
 
-    override val navRouterIntent = forIntent()
+    private val moduleTag = javaClass.simpleName
+
+    val bundleKey = "$moduleTag:PARAM"
 
     /**
-     * Starts the target [navRouterIntent] for the implementation
+     * Starts a new activity using the given [context] and [params]
      */
-    open operator fun invoke(context: Context?) {
+    override fun invoke(context: Context, params: Parcelable?) {
         runCatching {
-            context?.startActivity(navRouterIntent)
-        }.exceptionOrNull()?.printStackTrace()
+            val intent = feature.screen(context)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.putExtra(bundleKey, params)
+            context.startActivity(intent)
+        }.onFailure {
+            Timber.tag(moduleTag).w(it)
+        }
     }
 }

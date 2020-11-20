@@ -18,9 +18,6 @@ dependencies {
     implementation(Libraries.AndroidX.ContraintLayout.constraintLayout)
     implementation(Libraries.AndroidX.SwipeRefresh.swipeRefreshLayout)
 
-    /** Timber Trees */
-    implementation(Libraries.treessence)
-
     // debugImplementation because LeakCanary should only run in debug builds.
     debugImplementation(Libraries.Square.LeakCanary.leakCanary)
     debugImplementation(Libraries.debugDb)

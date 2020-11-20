@@ -20,7 +20,7 @@ object Libraries {
     object Android {
 
         object Tools {
-            private const val version = "4.0.1"
+            private const val version = "4.1.0"
             const val buildGradle = "com.android.tools.build:gradle:${version}"
         }
     }
@@ -31,12 +31,6 @@ object Libraries {
             private const val version = "1.2.0-alpha07"
             const val activity = "androidx.activity:activity:$version"
             const val activityKtx = "androidx.activity:activity-ktx:$version"
-        }
-
-        object AppCompat {
-            private const val version = "1.3.0-alpha01"
-            const val appcompat = "androidx.appcompat:appcompat:$version"
-            const val appcompatResources = "androidx.appcompat:appcompat-resources:$version"
         }
 
         object Collection {
@@ -90,36 +84,6 @@ object Libraries {
             const val media = "androidx.media:media:$version"
         }
 
-        object Media2 {
-            private const val version = "1.0.0-alpha04"
-            const val media2 = "androidx.media2:media2:$version"
-
-            object Common {
-                private const val version = "1.1.0-alpha01"
-                const val common = "androidx.media2:media2-common:${version}"
-            }
-
-            object ExoPlayer {
-                private const val version = "1.1.0-alpha01"
-                const val exoPlayer = "androidx.media2:media2-exoplayer:${version}"
-            }
-
-            object Player {
-                private const val version = "1.1.0-alpha01"
-                const val player = "androidx.media2:media2-player:${version}"
-            }
-
-            object Session {
-                private const val version = "1.1.0-alpha01"
-                const val session = "androidx.media2:media2-session:${version}"
-            }
-
-            object Widget {
-                private const val version = "1.1.0-alpha01"
-                const val widget = "androidx.media2:media2-widget:${version}"
-            }
-        }
-
         object Navigation {
             private const val version = "2.3.0"
             const val common = "androidx.navigation:navigation-common:$version"
@@ -150,12 +114,6 @@ object Libraries {
             const val runtimeKtx = "androidx.paging:paging-runtime-ktx:$version"
         }
 
-        object Palette {
-            private const val version = "1.0.0"
-            const val palette = "androidx.palette:palette:$version"
-            const val paletteKtx = "androidx.palette:palette-ktx:$version"
-        }
-
         object Preference {
             private const val version = "1.1.0"
             const val preference = "androidx.preference:preference:$version"
@@ -176,10 +134,6 @@ object Libraries {
             const val ktx = "androidx.room:room-ktx:$version"
         }
 
-        object Slice {
-            private const val version = "1.1.0-alpha01"
-            const val core = "androidx.slice:slice-core:$version"
-        }
 
         object StartUp {
             private const val version = "1.0.0-alpha02"
@@ -258,24 +212,6 @@ object Libraries {
         }
     }
 
-    object AirBnB {
-
-        object Lottie {
-            private const val version = "3.4.0"
-            const val lottie = "com.airbnb.android:lottie:$version"
-        }
-    }
-
-    object BlueLineLabs{
-        object Conductor {
-            private const val version = "3.0.0-rc5"
-            const val conductor = "com.bluelinelabs:conductor:$version"
-            const val transitions = "com.bluelinelabs:conductor-androidx-transition:$version"
-            const val viewPage = "com.bluelinelabs:conductor-viewpager:$version"
-            const val lifecycle = "com.bluelinelabs:conductor-archlifecycle:$version"
-        }
-    }
-
     object Chuncker {
         private const val version = "3.2.0"
 
@@ -293,16 +229,6 @@ object Libraries {
     }
 
     object Google {
-
-        object Exo {
-            private const val version = "2.11.7"
-            const val workManager = "com.google.android.exoplayer:extension-workmanager:$version"
-            const val okHttp = "com.google.android.exoplayer:extension-okhttp:$version"
-            const val core = "com.google.android.exoplayer:extension-core:$version"
-            const val dash = "com.google.android.exoplayer:extension-dash:$version"
-            const val hls = "com.google.android.exoplayer:exoplayer-hls:$version"
-            const val ui = "com.google.android.exoplayer:exoplayer-ui:$version"
-        }
 
         object Firebase {
             private const val version = "17.4.4"
@@ -348,20 +274,13 @@ object Libraries {
     }
 
     object JetBrains {
-        object Coroutines {
-            private const val version = "1.3.8"
-            const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
-            const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
-            const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version"
-        }
-
         object Dokka {
             private const val version = "0.10.1"
             const val gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:$version"
         }
 
         object Kotlin {
-            private const val version = "1.3.72"
+            private const val version = "1.4.10"
             const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
             const val reflect = "org.jetbrains.kotlin:kotlin-reflect:$version"
 
@@ -380,21 +299,21 @@ object Libraries {
 
         object KotlinX {
             object Coroutines {
-                private const val version = "1.3.7"
+                private const val version = "1.4.0"
                 const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
                 const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
                 const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version"
             }
 
             object Serialization {
-                private const val version = "0.20.0"
+                private const val version = "1.0.0"
                 const val runtime = "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$version"
             }
         }
     }
 
     object Koin {
-        private const val version = "2.1.6"
+        private const val version = "2.2.0-rc-3"
         const val core = "org.koin:koin-core:$version"
         const val extension = "org.koin:koin-core-ext:$version"
         const val test = "org.koin:koin-test:$version"
@@ -444,7 +363,7 @@ object Libraries {
     object Square {
 
         object LeakCanary {
-            private const val version = "2.4"
+            private const val version = "2.5"
             const val leakCanary = "com.squareup.leakcanary:leakcanary-android:$version"
         }
 

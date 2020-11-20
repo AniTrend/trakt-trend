@@ -1,6 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 plugins {
-    id("com.github.ben-manes.versions") version "0.29.0"
+    id("com.github.ben-manes.versions")
 }
 
 buildscript {
@@ -32,7 +33,7 @@ allprojects {
 
 tasks.named(
     "dependencyUpdates",
-    com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask::class.java
+    DependencyUpdatesTask::class.java
 ).configure {
     checkForGradleUpdate = false
     outputFormatter = "json"

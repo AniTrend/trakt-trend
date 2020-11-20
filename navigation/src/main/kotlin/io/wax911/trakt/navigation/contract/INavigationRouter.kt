@@ -17,8 +17,20 @@
 
 package io.wax911.trakt.navigation.contract
 
+import android.content.Context
 import android.content.Intent
+import android.os.Parcelable
+import io.wax911.trakt.navigation.feature.INavigationFeature
 
 internal interface INavigationRouter {
-    val navRouterIntent: Intent?
+
+    /**
+     * Feature provider contract
+     */
+    val feature: INavigationFeature
+
+    /**
+     * Starts a new activity using the given [context] and [params]
+     */
+    operator fun invoke(context: Context, params: Parcelable?)
 }

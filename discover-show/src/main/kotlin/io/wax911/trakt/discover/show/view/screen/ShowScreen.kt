@@ -8,15 +8,13 @@ import co.anitrend.arch.ui.view.widget.model.StateLayoutConfig
 import io.wax911.trakt.core.view.activity.TraktTrendActivity
 import io.wax911.trakt.discover.show.R
 import io.wax911.trakt.discover.show.databinding.ShowScreenBinding
-import io.wax911.trakt.navigation.NavigationTargets.ShowScreen
-import kotlinx.coroutines.delay
+import io.wax911.trakt.navigation.NavShow
 
 class ShowScreen : TraktTrendActivity() {
 
     private lateinit var binding: ShowScreenBinding
 
-    private val params
-            by extra<ShowScreen.Params>(ShowScreen.PARAM)
+    private val params by extra<NavShow.Params>(NavShow.bundleKey)
 
     /**
      * Additional initialization to be done in this method, this is called in during

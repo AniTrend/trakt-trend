@@ -7,6 +7,7 @@ import io.wax911.trakt.buildSrc.common.domain
 import io.wax911.trakt.buildSrc.common.navigation
 import io.wax911.trakt.buildSrc.common.isFeatureModule
 import io.wax911.trakt.buildSrc.common.isAppModule
+import io.wax911.trakt.buildSrc.common.isCoreModule
 import io.wax911.trakt.buildSrc.common.featureModules
 import io.wax911.trakt.buildSrc.plugin.strategy.DependencyStrategy
 import org.gradle.api.Project
@@ -53,6 +54,8 @@ private fun Project.applyFeatureModules() {
     dependencies.add("implementation", project(":$domain"))
     dependencies.add("implementation", project(":$data"))
     dependencies.add("implementation", project(":$core"))
+
+    dependencies.add("implementation", Libraries.AndroidX.StartUp.startUpRuntime)
 }
 
 internal fun Project.configureDependencies() {
@@ -66,4 +69,6 @@ internal fun Project.configureDependencies() {
 
     if (isFeatureModule()) applyPlatformDependencies()
     if (isAppModule()) applyFeatureModules()
+    if (isCoreModule())
+        dependencies.add("implementation", Libraries.AndroidX.StartUp.startUpRuntime)
 }
