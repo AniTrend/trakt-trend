@@ -2,7 +2,6 @@ import io.wax911.trakt.buildSrc.Libraries
 
 plugins {
     id("io.wax911.trakt.plugin")
-    id("androidx.navigation.safeargs.kotlin")
 }
 
 dependencies {
@@ -15,7 +14,7 @@ dependencies {
     implementation(Libraries.AndroidX.Work.runtimeKtx)
     implementation(Libraries.AndroidX.Fragment.fragmentKtx)
     implementation(Libraries.AndroidX.Activity.activityKtx)
-    implementation(Libraries.AndroidX.ContraintLayout.constraintLayout)
+    implementation(Libraries.AndroidX.ConstraintLayout.constraintLayout)
     implementation(Libraries.AndroidX.SwipeRefresh.swipeRefreshLayout)
 
     // debugImplementation because LeakCanary should only run in debug builds.

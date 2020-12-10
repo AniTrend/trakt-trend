@@ -8,7 +8,6 @@ import co.anitrend.arch.core.model.IStateLayoutConfig
 import co.anitrend.arch.recycler.action.contract.ISupportSelectionMode
 import co.anitrend.arch.recycler.adapter.SupportPagedListAdapter
 import co.anitrend.arch.recycler.model.contract.IRecyclerItem
-import co.anitrend.arch.recycler.shared.SupportFooterLoadingItem
 import co.anitrend.arch.theme.animator.ScaleAnimator
 import co.anitrend.arch.theme.animator.contract.AbstractAnimator
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
@@ -19,9 +18,7 @@ class MediaAdapter(
     override val stateConfiguration: IStateLayoutConfig,
     override var supportAction: ISupportSelectionMode<Long>? = null,
     override var customSupportAnimator: AbstractAnimator? = ScaleAnimator(),
-    override val mapper: (ISharedMediaWithImage?) -> IRecyclerItem = {
-        if (it != null) MediaItem(it) else SupportFooterLoadingItem(stateConfiguration)
-    }
+    override val mapper: (ISharedMediaWithImage) -> IRecyclerItem = { MediaItem(it) }
 ) : SupportPagedListAdapter<ISharedMediaWithImage>(MediaItem.DIFFER) {
 
     /**

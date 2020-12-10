@@ -43,6 +43,5 @@ class SplashScreen : TraktTrendActivity() {
             startNewActivity<MainScreen>(intent.extras)
             finish()
         }
-
     }
 }

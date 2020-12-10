@@ -1,17 +1,17 @@
-package io.wax911.trakt.data.movie.datasource.local.transformer
+package io.wax911.trakt.data.movie.converter
 
-import co.anitrend.arch.data.mapper.contract.ISupportMapperHelper
+import co.anitrend.arch.data.converter.SupportConverter
+import co.anitrend.arch.data.transformer.ISupportTransformer
 import com.uwetrottmann.trakt5.entities.Movie
 import io.wax911.trakt.data.show.entity.ShowEntity
 import io.wax911.trakt.domain.models.MediaType
 
-internal object MovieTransformer : ISupportMapperHelper<Movie, ShowEntity> {
-
-    /**
-     * Transforms the the [source] to the target type
-     */
-    override fun transform(source: Movie): ShowEntity {
-        return ShowEntity(
+internal class MovieModelConverter(
+    override val fromType: (Movie) -> ShowEntity = ::transform,
+    override val toType: (ShowEntity) -> Movie = { throw NotImplementedError() }
+) : SupportConverter<Movie, ShowEntity>() {
+    private companion object : ISupportTransformer<Movie, ShowEntity> {
+        override fun transform(source: Movie) = ShowEntity(
             airs = null,
             network = null,
             country = null,

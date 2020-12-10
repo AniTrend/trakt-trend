@@ -23,6 +23,7 @@ data class MediaItem(
 ) : RecyclerItem(entity.media.id.toLong()) {
 
     private var disposable: RequestDisposable? = null
+    private var binding: AdapterMediaItemBinding? = null
 
     /**
      * Called when the [view] needs to be setup, this could be to set click listeners,
@@ -35,9 +36,9 @@ data class MediaItem(
         stateFlow: MutableStateFlow<ClickableItem?>,
         selectionMode: ISupportSelectionMode<Long>?
     ) {
-        val binding = AdapterMediaItemBinding.bind(view)
-        disposable = binding.showImage.using(entity.image)
-        binding.showTitle.text = entity.media.title
+        binding = AdapterMediaItemBinding.bind(view)
+        disposable = binding?.showImage?.using(entity.image)
+        binding?.showTitle?.text = entity.media.title
 
         view.setOnClickListener {
             stateFlow.value =
@@ -56,6 +57,7 @@ data class MediaItem(
         view.setOnClickListener(null)
         disposable?.dispose()
         disposable = null
+        binding = null
     }
 
     /**

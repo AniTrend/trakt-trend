@@ -1,14 +1,31 @@
 package io.wax911.trakt.data.movie.mapper
 
 import com.uwetrottmann.trakt5.entities.Movie
-import io.wax911.trakt.data.arch.mapper.TraktTrendMapper
-import io.wax911.trakt.data.movie.datasource.local.transformer.MovieTransformer
-import io.wax911.trakt.data.show.datasource.local.ShowDao
+import io.wax911.trakt.data.arch.mapper.DefaultMapper
+import io.wax911.trakt.data.arch.railway.OutCome
+import io.wax911.trakt.data.arch.railway.extension.evaluate
+import io.wax911.trakt.data.arch.railway.extension.otherwise
+import io.wax911.trakt.data.arch.railway.extension.then
+import io.wax911.trakt.data.movie.converter.MovieModelConverter
+import io.wax911.trakt.data.show.datasource.local.ShowLocalSource
 import io.wax911.trakt.data.show.entity.ShowEntity
 
 internal class MovieMapper(
-    private val localSource: ShowDao
-) : TraktTrendMapper<List<Movie>, List<ShowEntity>>() {
+    private val localSource: ShowLocalSource,
+    private val converter: MovieModelConverter
+) : DefaultMapper<List<Movie>, List<ShowEntity>>() {
+
+    /**
+     * Handles the persistence of [data] into a local source
+     *
+     * @return [OutCome.Pass] or [OutCome.Fail] of the operation
+     */
+    override suspend fun persistChanges(data: List<ShowEntity>): OutCome<Nothing?> {
+        return runCatching {
+            localSource.upsert(data)
+            OutCome.Pass(null)
+        }.getOrElse { OutCome.Fail(listOf(it)) }
+    }
 
     /**
      * Creates mapped objects and handles the database operations which may be required to map various objects,
@@ -18,9 +35,7 @@ internal class MovieMapper(
      * @return Mapped object that will be consumed by [onResponseDatabaseInsert]
      */
     override suspend fun onResponseMapFrom(source: List<Movie>): List<ShowEntity> {
-        return source.map {
-            MovieTransformer.transform(it)
-        }
+        return converter.convertFrom(source)
     }
 
     /**
@@ -30,7 +45,9 @@ internal class MovieMapper(
      * @param mappedData mapped object from [onResponseMapFrom] to insert into the database
      */
     override suspend fun onResponseDatabaseInsert(mappedData: List<ShowEntity>) {
-        if (mappedData.isNotEmpty())
-            localSource.upsert(mappedData)
+        mappedData evaluate
+                ::checkValidity then
+                ::persistChanges otherwise
+                ::handleException
     }
 }

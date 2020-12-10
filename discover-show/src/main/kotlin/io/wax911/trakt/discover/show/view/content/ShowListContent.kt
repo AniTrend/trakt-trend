@@ -77,7 +77,7 @@ class ShowListContent(
                 payload = it
             )
         }
-        if (payload != null) {
+        if (payload == null) {
             supportStateLayout?.networkMutableStateFlow?.value =
                 NetworkState.Error(
                     heading = "Missing payload",
@@ -93,9 +93,7 @@ class ShowListContent(
     override fun setUpViewModelObserver() {
         viewModelState().model.observe(
             viewLifecycleOwner,
-            Observer {
-                onPostModelChange(it)
-            }
+            ::onPostModelChange
         )
     }
 

@@ -28,10 +28,9 @@ import timber.log.Timber
 
 class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private val bottomDrawerBehavior
-            by lazy(UNSAFE) {
-                BottomSheetBehavior.from(bottomNavigationDrawer)
-            }
+    private val bottomDrawerBehavior by lazy(UNSAFE) {
+        BottomSheetBehavior.from(bottomNavigationDrawer)
+    }
 
     @IdRes
     private var selectedItem: Int = R.id.nav_popular_series

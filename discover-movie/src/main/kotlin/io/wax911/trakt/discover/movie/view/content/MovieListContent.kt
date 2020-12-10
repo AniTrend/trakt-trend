@@ -96,9 +96,7 @@ class MovieListContent(
     override fun setUpViewModelObserver() {
         viewModelState().model.observe(
             viewLifecycleOwner,
-            Observer {
-                onPostModelChange(it)
-            }
+            ::onPostModelChange
         )
     }
 

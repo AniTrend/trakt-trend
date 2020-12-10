@@ -1,14 +1,12 @@
 package io.wax911.trakt.discover.show.viewmodel.model
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.asLiveData
 import androidx.paging.PagedList
 import co.anitrend.arch.core.model.ISupportViewModelState
 import co.anitrend.arch.data.state.DataState
-import co.anitrend.arch.domain.entities.NetworkState
-import io.wax911.trakt.data.show.usecase.SeriesUseCaseType
+import io.wax911.trakt.data.show.SeriesUseCaseType
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
 import io.wax911.trakt.domain.models.MediaPayload
 
@@ -19,12 +17,12 @@ class ShowModelState(
     private val useCaseResult = MutableLiveData<DataState<PagedList<ISharedMediaWithImage>>>()
 
     override val model =
-        switchMap(useCaseResult) { it.model }
+        switchMap(useCaseResult) { it.model.asLiveData() }
 
-    override val networkState: LiveData<NetworkState>? =
+    override val networkState =
         switchMap(useCaseResult) { it.networkState.asLiveData() }
 
-    override val refreshState: LiveData<NetworkState>? =
+    override val refreshState =
         switchMap(useCaseResult) { it.refreshState.asLiveData() }
 
     operator fun invoke(payload: MediaPayload) {

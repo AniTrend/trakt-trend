@@ -1,7 +1,7 @@
 package io.wax911.trakt.discover.movie.viewmodel
 
 import androidx.lifecycle.ViewModel
-import io.wax911.trakt.data.movie.usecase.FilmUseCaseType
+import io.wax911.trakt.data.movie.FilmUseCaseType
 import io.wax911.trakt.discover.movie.viewmodel.model.MovieModelState
 
 class MovieViewModel(

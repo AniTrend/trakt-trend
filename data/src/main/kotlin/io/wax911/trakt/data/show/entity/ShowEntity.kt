@@ -2,13 +2,10 @@ package io.wax911.trakt.data.show.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import co.anitrend.arch.data.mapper.contract.ISupportMapperHelper
 import io.wax911.trakt.data.show.entity.contract.IShowEntity
 import io.wax911.trakt.data.show.entity.trending.ITrendingEntity
-import io.wax911.trakt.domain.models.MediaType
-import io.wax911.trakt.domain.entities.show.ShowItem
 import io.wax911.trakt.domain.entities.contract.IEntity
-import io.wax911.trakt.domain.entities.show.contract.ISharedMedia
+import io.wax911.trakt.domain.models.MediaType
 
 @Entity
 internal data class ShowEntity(
@@ -72,21 +69,5 @@ internal data class ShowEntity(
         result = 31 * result + showType.hashCode()
         result = 31 * result + (watchers ?: 0)
         return result
-    }
-
-    companion object : ISupportMapperHelper<ShowEntity, ISharedMedia> {
-        /**
-         * Transforms the the [source] to the target type
-         */
-        override fun transform(source: ShowEntity): ISharedMedia {
-            return ShowItem(
-                title = source.title.orEmpty(),
-                rating = source.rating ?: 0.0,
-                votes = source.votes ?: 0,
-                updated = source.updated ?: 0,
-                year = source.year ?: 0,
-                id = source.id
-            )
-        }
     }
 }

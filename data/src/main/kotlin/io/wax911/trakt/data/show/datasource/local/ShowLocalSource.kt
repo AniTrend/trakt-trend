@@ -9,7 +9,7 @@ import io.wax911.trakt.domain.models.MediaType
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-internal abstract class ShowDao: DaoQuery<ShowEntity> {
+internal abstract class ShowLocalSource: DaoQuery<ShowEntity> {
 
     @Query("""
         select count(id) from ShowEntity where showType = :showType

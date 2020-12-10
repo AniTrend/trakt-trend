@@ -31,7 +31,7 @@ private fun Project.applyPlatformDependencies() {
     dependencies.add("implementation", Libraries.AndroidX.StartUp.startUpRuntime)
     dependencies.add("implementation", Libraries.AndroidX.Collection.collectionKtx)
     dependencies.add("implementation", Libraries.AndroidX.SwipeRefresh.swipeRefreshLayout)
-    dependencies.add("implementation", Libraries.AndroidX.ContraintLayout.constraintLayout)
+    dependencies.add("implementation", Libraries.AndroidX.ConstraintLayout.constraintLayout)
 
     dependencies.add("implementation", Libraries.Tinder.StateMachine.stateMachine)
 

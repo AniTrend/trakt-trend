@@ -1,19 +1,15 @@
 package io.wax911.trakt.data.show.source
 
-import androidx.lifecycle.liveData
-import androidx.paging.DataSource
-import androidx.paging.toLiveData
+import androidx.paging.PagedList
+import co.anitrend.arch.data.paging.FlowPagedListBuilder
 import co.anitrend.arch.data.request.callback.RequestCallback
 import co.anitrend.arch.data.util.PAGING_CONFIGURATION
-import co.anitrend.arch.extension.dispatchers.SupportDispatchers
-import co.anitrend.arch.extension.network.SupportConnectivity
+import co.anitrend.arch.extension.dispatchers.contract.ISupportDispatcher
 import com.uwetrottmann.trakt5.enums.Extended
-import com.uwetrottmann.trakt5.services.Shows
-import io.wax911.trakt.data.arch.controller.policy.OnlineControllerPolicy
-import io.wax911.trakt.data.arch.extensions.controller
-import io.wax911.trakt.data.show.datasource.local.ShowDao
-import io.wax911.trakt.data.show.entity.ShowEntity
-import io.wax911.trakt.data.show.mapper.ShowMapper
+import io.wax911.trakt.data.show.PopularShowController
+import io.wax911.trakt.data.show.ShowRemoteSource
+import io.wax911.trakt.data.show.converter.ShowEntityConverter
+import io.wax911.trakt.data.show.datasource.local.ShowLocalSource
 import io.wax911.trakt.data.show.source.contract.ShowPagedSource
 import io.wax911.trakt.domain.entities.image.TmdbImage
 import io.wax911.trakt.domain.entities.image.enums.ShowImageType
@@ -21,56 +17,47 @@ import io.wax911.trakt.domain.entities.shared.ShowWithImage
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
 import io.wax911.trakt.domain.models.MediaType
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 internal class ShowPagedSourceImpl(
-    private val localSource: ShowDao,
-    private val remoteSource: Shows,
-    private val mapper: ShowMapper,
-    private val connectivity: SupportConnectivity,
-    dispatchers: SupportDispatchers
-) : ShowPagedSource(dispatchers) {
+    private val localSource: ShowLocalSource,
+    private val remoteSource: ShowRemoteSource,
+    private val controller: PopularShowController,
+    private val converter: ShowEntityConverter,
+    dispatcher: ISupportDispatcher
+) : ShowPagedSource(dispatcher) {
 
-    override suspend fun execute(callback: RequestCallback) {
-        val call = remoteSource.popular(
+    override fun observable(): Flow<PagedList<ISharedMediaWithImage>> {
+        val dataSourceFactory = localSource
+                .getPopular(MediaType.SERIES)
+                .map<ISharedMediaWithImage> {
+                    ShowWithImage(
+                        media = converter.convertFrom(it),
+                        image = TmdbImage(
+                            type = MediaType.SERIES,
+                            imageType = ShowImageType.POSTER,
+                            id = it.tmdbId ?: 0
+                        )
+                    )
+                }
+
+        return FlowPagedListBuilder(
+            dataSourceFactory,
+            PAGING_CONFIGURATION,
+            null,
+            this@ShowPagedSourceImpl
+        ).buildFlow()
+    }
+
+    override suspend fun getPopularShows(callback: RequestCallback) {
+        val request = remoteSource.popular(
             supportPagingHelper.page,
             supportPagingHelper.pageSize,
             Extended.FULL
         )
 
-        val controller =
-            mapper.controller(
-                OnlineControllerPolicy.create(
-                    connectivity
-                ),
-                dispatchers
-            )
-
-        controller(call, callback)
-    }
-
-    override fun invoke() = liveData {
-        val dataSourceFactory = localSource.getPopular(MediaType.SERIES)
-
-        val result: DataSource.Factory<Int, ISharedMediaWithImage> = dataSourceFactory.map {
-            val show = ShowEntity.transform(it)
-
-            ShowWithImage(
-                media = show,
-                image = TmdbImage(
-                    type = MediaType.SERIES,
-                    imageType = ShowImageType.POSTER,
-                    id = it.tmdbId ?: 0
-                )
-            )
-        }
-
-        emitSource(
-            result.toLiveData(
-                config = PAGING_CONFIGURATION,
-                boundaryCallback = this@ShowPagedSourceImpl
-            )
-        )
+        controller(request, callback)
     }
 
     /**
