@@ -1,14 +1,11 @@
 package io.wax911.trakt.data.show.usecase
 
-import androidx.paging.PagedList
 import co.anitrend.arch.data.repository.contract.ISupportRepository
-import co.anitrend.arch.data.state.DataState
-import io.wax911.trakt.data.show.repository.SeriesPagedRepository
-import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
-import io.wax911.trakt.domain.usecases.series.SeriesUseCase
+import io.wax911.trakt.data.show.SeriesPageRepository
+import io.wax911.trakt.data.show.SeriesUseCaseType
 
 internal class SeriesPagedListUseCase(
-    repository: SeriesPagedRepository
+    repository: SeriesPageRepository
 ) : SeriesUseCaseType(repository) {
 
     /**
@@ -19,5 +16,3 @@ internal class SeriesPagedListUseCase(
         repository.onCleared()
     }
 }
-
-typealias SeriesUseCaseType = SeriesUseCase<DataState<PagedList<ISharedMediaWithImage>>>

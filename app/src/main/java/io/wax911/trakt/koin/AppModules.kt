@@ -1,6 +1,5 @@
 package io.wax911.trakt.koin
 
-import android.content.Context
 import android.net.ConnectivityManager
 import co.anitrend.arch.core.analytic.contract.ISupportAnalytics
 import co.anitrend.arch.core.provider.SupportFileProvider
@@ -36,9 +35,7 @@ private val appModule = module {
     }
     single {
         SupportConnectivity(
-            androidApplication().systemServiceOf<ConnectivityManager>(
-                Context.CONNECTIVITY_SERVICE
-            )
+            androidApplication().systemServiceOf<ConnectivityManager>()
         )
     }
 }

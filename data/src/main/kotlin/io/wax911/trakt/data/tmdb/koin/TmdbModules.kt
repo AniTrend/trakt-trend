@@ -5,9 +5,11 @@ import com.uwetrottmann.tmdb2.Tmdb
 import io.wax911.trakt.data.BuildConfig
 import io.wax911.trakt.data.arch.extensions.db
 import io.wax911.trakt.data.arch.extensions.tmdb
+import io.wax911.trakt.data.arch.extensions.defaultController
+import io.wax911.trakt.data.tmdb.converter.TmdbEntityConverter
+import io.wax911.trakt.data.tmdb.converter.TmdbModelConverter
 import io.wax911.trakt.data.tmdb.mapper.TmdbMovieMapper
 import io.wax911.trakt.data.tmdb.mapper.TmdbShowMapper
-import io.wax911.trakt.data.tmdb.repository.TmdbRepository
 import io.wax911.trakt.data.tmdb.source.TmdbSourceImpl
 import io.wax911.trakt.data.tmdb.source.contract.TmdbSource
 import okhttp3.Cache
@@ -53,41 +55,42 @@ private val dataSourceModule = module {
             localSource = db().tmdbDao(),
             remoteTvSource = tmdb().tvService(),
             remoteMovieSource = tmdb().moviesService(),
-            connectivity = get(),
-            movieMapper = get(),
-            showMapper = get(),
-            dispatchers = get()
+            showController = defaultController(
+                mapper = get<TmdbShowMapper>()
+            ),
+            movieController = defaultController(
+                mapper = get<TmdbMovieMapper>()
+            ),
+            converter = get(),
+            dispatcher = get()
         )
+    }
+}
+
+private val converterModule = module {
+    factory {
+        TmdbEntityConverter()
+    }
+    factory {
+        TmdbModelConverter()
     }
 }
 
 private val mapperModule = module {
     factory {
         TmdbMovieMapper(
-            localDao = db().tmdbDao()
+            localSource = db().tmdbDao(),
+            converter = get()
         )
     }
     factory {
         TmdbShowMapper(
-            localDao = db().tmdbDao()
+            localSource = db().tmdbDao(),
+            converter = get()
         )
-    }
-}
-
-private val repositoryModule = module {
-    factory {
-        TmdbRepository(
-            source = get()
-        )
-    }
-}
-
-private val useCaseModule = module {
-    single {
-
     }
 }
 
 internal val tmdbModules = listOf(
-    networkModule, mapperModule, dataSourceModule, repositoryModule
+    networkModule, converterModule, mapperModule, dataSourceModule
 )

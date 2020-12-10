@@ -15,8 +15,6 @@ import io.wax911.trakt.domain.entities.image.contract.ITmdbImage
 import io.wax911.trakt.domain.entities.image.enums.ShowImageType
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient

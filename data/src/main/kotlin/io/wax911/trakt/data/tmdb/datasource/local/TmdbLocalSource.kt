@@ -7,7 +7,7 @@ import io.wax911.trakt.data.tmdb.entity.TmdbImageEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-internal abstract class TmdbDao : DaoQuery<TmdbImageEntity> {
+internal abstract class TmdbLocalSource : DaoQuery<TmdbImageEntity> {
 
     @Query("""
         select count(id) from TmdbImageEntity where showId = :tmdb

@@ -1,6 +1,7 @@
 package io.wax911.trakt.core.koin
 
-import co.anitrend.arch.extension.dispatchers.SupportDispatchers
+import co.anitrend.arch.extension.dispatchers.SupportDispatcher
+import co.anitrend.arch.extension.dispatchers.contract.ISupportDispatcher
 import coil.map.MeasuredMapper
 import coil.util.CoilUtils
 import io.wax911.trakt.core.helpers.coil.fetch.ShowImageFetcher
@@ -22,8 +23,8 @@ private val coreModule = module {
             androidContext()
         )
     } binds(Settings.BINDINGS)
-    single {
-        SupportDispatchers()
+    single<ISupportDispatcher> {
+        SupportDispatcher()
     }
 }
 

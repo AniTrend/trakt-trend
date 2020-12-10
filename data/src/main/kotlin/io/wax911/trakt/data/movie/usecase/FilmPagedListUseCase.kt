@@ -1,14 +1,11 @@
 package io.wax911.trakt.data.movie.usecase
 
-import androidx.paging.PagedList
 import co.anitrend.arch.data.repository.contract.ISupportRepository
-import co.anitrend.arch.data.state.DataState
-import io.wax911.trakt.data.movie.repository.FilmPagedRepository
-import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
-import io.wax911.trakt.domain.usecases.film.FilmUseCase
+import io.wax911.trakt.data.movie.FilmPageRepository
+import io.wax911.trakt.data.movie.FilmUseCaseType
 
 internal class FilmPagedListUseCase(
-    repository: FilmPagedRepository
+    repository: FilmPageRepository
 ) : FilmUseCaseType(repository) {
 
     /**
@@ -19,5 +16,3 @@ internal class FilmPagedListUseCase(
         repository.onCleared()
     }
 }
-
-typealias FilmUseCaseType = FilmUseCase<DataState<PagedList<ISharedMediaWithImage>>>

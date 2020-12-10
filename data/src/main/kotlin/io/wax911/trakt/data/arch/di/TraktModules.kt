@@ -26,29 +26,35 @@ private val dataModule = module {
     }
 
     single {
-        SupportDateHelper(
-            context = androidContext()
-        )
+        SupportDateHelper()
     }
 }
 
 private val networkModule = module {
     factory {
-        ChuckerInterceptor(
-            context = androidContext(),
+        ChuckerInterceptor.Builder(
+            context = androidContext()
             // The previously created Collector
-            collector = ChuckerCollector(
-                context = androidContext(),
-                // Toggles visibility of the push notification
-                showNotification = true,
-                // Allows to customize the retention period of collected data
-                retentionPeriod = RetentionManager.Period.ONE_HOUR
-            ),
-            // The max body content length in bytes, after this responses will be truncated.
-            maxContentLength = 250000L,
-            // List of headers to replace with ** in the Chucker UI
-            headersToRedact = setOf("Auth-Token")
         )
+            .collector(
+                collector = ChuckerCollector(
+                    context = androidContext(),
+                    // Toggles visibility of the push notification
+                    showNotification = true,
+                    // Allows to customize the retention period of collected data
+                    retentionPeriod = RetentionManager.Period.ONE_HOUR
+                )
+                // The max body content length in bytes, after this responses will be truncated.
+            )
+            .maxContentLength(
+                length = 250000L
+                // List of headers to replace with ** in the Chucker UI
+            )
+            .redactHeaders(
+                headerNames = setOf("Auth-Token")
+            )
+            .alwaysReadResponseBody(false)
+            .build()
     }
     factory {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
