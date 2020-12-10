@@ -20,7 +20,7 @@ object Libraries {
     object Android {
 
         object Tools {
-            private const val version = "4.1.0"
+            private const val version = "4.1.1"
             const val buildGradle = "com.android.tools.build:gradle:${version}"
         }
     }
@@ -28,7 +28,7 @@ object Libraries {
     object AndroidX {
 
         object Activity {
-            private const val version = "1.2.0-alpha07"
+            private const val version = "1.2.0-beta02"
             const val activity = "androidx.activity:activity:$version"
             const val activityKtx = "androidx.activity:activity-ktx:$version"
         }
@@ -40,7 +40,7 @@ object Libraries {
         }
 
         object Core {
-            private const val version = "1.5.0-alpha01"
+            private const val version = "1.5.0-alpha05"
             const val core = "androidx.core:core:$version"
             const val coreKtx = "androidx.core:core-ktx:$version"
 
@@ -51,60 +51,27 @@ object Libraries {
             }
         }
 
-        object ContraintLayout {
-            private const val version = "2.0.0-rc1"
+        object ConstraintLayout {
+            private const val version = "2.1.0-alpha1"
             const val constraintLayout = "androidx.constraintlayout:constraintlayout:$version"
             const val constraintLayoutSolver = "androidx.constraintlayout:constraintlayout-solver:$version"
         }
 
-        object Emoji {
-            private const val version = "1.1.0-rc01"
-            const val appCompat = "androidx.emoji:emoji-appcompat:$version"
-        }
-
         object Fragment {
-            private const val version = "1.3.0-alpha07"
+            private const val version = "1.3.0-beta02"
             const val fragment = "androidx.fragment:fragment:$version"
             const val fragmentKtx = "androidx.fragment:fragment-ktx:$version"
             const val test = "androidx.fragment:fragment-ktx:fragment-testing$version"
         }
 
         object Lifecycle {
-            private const val version = "2.2.0"
-            const val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
+            private const val version = "2.3.0-beta01"
+            // TODO: Upgrade to 2.3.0-* when it is available for extensions
+            const val extensions = "androidx.lifecycle:lifecycle-extensions:2.2.0"
             const val runTimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:$version"
             const val liveDataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
             const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
             const val liveDataCoreKtx = "androidx.lifecycle:lifecycle-livedata-core-ktx:$version"
-        }
-
-        @Deprecated("Use Media2 instead")
-        object Media {
-            private const val version = "1.1.0"
-            const val media = "androidx.media:media:$version"
-        }
-
-        object Navigation {
-            private const val version = "2.3.0"
-            const val common = "androidx.navigation:navigation-common:$version"
-            const val commonKtx = "androidx.navigation:navigation-common-ktx:$version"
-
-            const val dynamicFragment = "androidx.navigation:navigation-dynamic-features-fragment:$version"
-            const val dynamicRuntime = "androidx.navigation:navigation-dynamic-features-runtime:$version"
-
-            const val fragment = "androidx.navigation:navigation-fragment:$version"
-            const val fragmentKtx = "androidx.navigation:navigation-fragment-ktx:$version"
-
-            const val runtime = "androidx.navigation:navigation-runtime:$version"
-            const val runtimeKtx = "androidx.navigation:navigation-runtime-ktx:$version"
-
-            const val safeArgsgenerator = "androidx.navigation:navigation-safe-args-generator:$version"
-            const val safeArgsGradlePlugin = "androidx.navigation:navigation-safe-args-gradle-plugin:$version"
-
-            const val test = "androidx.navigation:navigation-testing:$version"
-
-            const val ui = "androidx.navigation:navigation-ui:$version"
-            const val uiKtx = "androidx.navigation:navigation-ui-ktx:$version"
         }
 
         object Paging {
@@ -115,15 +82,19 @@ object Libraries {
         }
 
         object Preference {
-            private const val version = "1.1.0"
+            private const val version = "1.1.1"
             const val preference = "androidx.preference:preference:$version"
             const val preferenceKtx = "androidx.preference:preference-ktx:$version"
         }
 
         object Recycler {
-            private const val version = "1.2.0-alpha05"
+            private const val version = "1.2.0-beta01"
             const val recyclerView = "androidx.recyclerview:recyclerview:$version"
-            const val recyclerViewSelection = "androidx.recyclerview:recyclerview-selection:$version"
+
+            object Selection {
+                private const val version = "1.1.0-rc03"
+                const val selection = "androidx.recyclerview:recyclerview-selection:$version"
+            }
         }
 
         object Room {
@@ -136,36 +107,36 @@ object Libraries {
 
 
         object StartUp {
-            private const val version = "1.0.0-alpha02"
+            private const val version = "1.0.0"
             const val startUpRuntime = "androidx.startup:startup-runtime:$version"
         }
 
         object SwipeRefresh {
-            private const val version = "1.1.0"
+            private const val version = "1.2.0-alpha01"
             const val swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:$version"
         }
 
         object Test {
-            private const val version = "1.3.0-rc03"
+            private const val version = "1.3.0"
             const val core = "androidx.test:core:$version"
             const val coreKtx = "androidx.test:core-ktx:$version"
             const val runner = "androidx.test:runner:$version"
             const val rules = "androidx.test:rules:$version"
 
             object Espresso {
-                private const val version = "3.3.0-rc01"
+                private const val version = "3.3.0"
                 const val core = "androidx.test.espresso:espresso-core:$version"
             }
 
             object Extension {
-                private const val version = "1.1.2-rc03"
+                private const val version = "1.1.2"
                 const val junit = "androidx.test.ext:junit:$version"
                 const val junitKtx = "androidx.test.ext:junit-ktx:$version"
             }
         }
 
         object Work {
-            private const val version = "2.4.0"
+            private const val version = "2.5.0-beta02"
             const val runtimeKtx = "androidx.work:work-runtime-ktx:$version"
             const val runtime = "androidx.work:work-runtime:$version"
             const val test = "androidx.work:work-test:$version"
@@ -175,7 +146,7 @@ object Libraries {
     object AniTrend {
 
         object Arch {
-			private const val version = "51d6961c2e"//"1.3.0-beta14"
+			private const val version = "a73b564e05"//"1.3.0-beta14"
             const val ui = "com.github.anitrend.support-arch:support-ui:${version}"
             const val ext = "com.github.anitrend.support-arch:support-ext:${version}"
             const val core = "com.github.anitrend.support-arch:support-core:${version}"
@@ -190,30 +161,14 @@ object Libraries {
             const val emojify = "com.github.anitrend:android-emojify:$version"
         }
 
-        object Markdown {
-            private const val version = "0.1.0"
-            const val markdown = "com.github.anitrend:support-markdown:${version}"
-        }
-
         object Material {
             private const val version = "0.1.3"
             const val multiSearch = "com.github.anitrend:material-multi-search:${version}"
         }
-
-        object Retrofit {
-            private const val version = "0.11.0-alpha01" // not production ready w.i.p
-            //private const val version = "develop-SNAPSHOT" // testing development snapshot
-            const val graphQL = "com.github.anitrend:retrofit-graphql:${version}"
-        }
-
-        object Sync {
-            private const val version = "0.1.0-alpha01"
-            const val plugin = "com.github.anitrend:support-sync-plugin:${version}"
-        }
     }
 
     object Chuncker {
-        private const val version = "3.2.0"
+        private const val version = "3.4.0"
 
         const val debug = "com.github.ChuckerTeam.Chucker:library:$version"
         const val release = "com.github.ChuckerTeam.Chucker:library-no-op:$version"
@@ -235,17 +190,17 @@ object Libraries {
             const val firebaseCore = "com.google.firebase:firebase-core:$version"
 
             object Analytics {
-                private const val version = "17.4.3"
+                private const val version = "18.0.0"
                 const val analytics = "com.google.firebase:firebase-analytics:$version"
                 const val analyticsKtx = "com.google.firebase:firebase-analytics-ktx:$version"
             }
 
             object Crashlytics {
-                private const val version = "17.1.1"
+                private const val version = "17.3.0"
                 const val crashlytics = "com.google.firebase:firebase-crashlytics:$version"
 
                 object Gradle {
-                    private const val version = "2.2.0"
+                    private const val version = "2.4.1"
                     const val plugin = "com.google.firebase:firebase-crashlytics-gradle:$version"
                 }
             }
@@ -262,34 +217,19 @@ object Libraries {
         }
 
         object Services {
-            private const val version = "4.3.3"
+            private const val version = "4.3.4"
             const val googleServices = "com.google.gms:google-services:$version"
         }
     }
 
-    object Glide {
-        private const val version = "4.11.0"
-        const val glide = "com.github.bumptech.glide:glide:$version"
-        const val compiler = "com.github.bumptech.glide:compiler:$version"
-    }
-
     object JetBrains {
-        object Dokka {
-            private const val version = "0.10.1"
-            const val gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:$version"
-        }
-
         object Kotlin {
-            private const val version = "1.4.10"
+            private const val version = "1.4.21"
             const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
             const val reflect = "org.jetbrains.kotlin:kotlin-reflect:$version"
 
             object Gradle {
                 const val plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
-            }
-
-            object Android {
-                const val extensions = "org.jetbrains.kotlin:kotlin-android-extensions:$version"
             }
 
             object Serialization {
@@ -299,21 +239,21 @@ object Libraries {
 
         object KotlinX {
             object Coroutines {
-                private const val version = "1.4.0"
+                private const val version = "1.4.2"
                 const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
                 const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
                 const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version"
             }
 
             object Serialization {
-                private const val version = "1.0.0"
+                private const val version = "1.0.1"
                 const val runtime = "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$version"
             }
         }
     }
 
     object Koin {
-        private const val version = "2.2.0-rc-3"
+        private const val version = "2.2.1"
         const val core = "org.koin:koin-core:$version"
         const val extension = "org.koin:koin-core-ext:$version"
         const val test = "org.koin:koin-test:$version"
@@ -329,37 +269,6 @@ object Libraries {
         }
     }
 
-    object Markwon {
-        private const val version = "4.4.0"
-        const val core = "io.noties.markwon:core:$version"
-        const val html = "io.noties.markwon:html:$version"
-        const val image = "io.noties.markwon:image:$version"
-        const val glide = "io.noties.markwon:image-glide:$version"
-        const val coil = "io.noties.markwon:image-coil:$version"
-        const val parser = "io.noties.markwon:inline-parser:$version"
-        const val linkify = "io.noties.markwon:linkify:$version"
-        const val simpleExt = "io.noties.markwon:simple-ext:$version"
-        const val syntaxHighlight = "io.noties.markwon:syntax-highlight:$version"
-
-        object Extension {
-            const val taskList = "io.noties.markwon:ext-tasklist:$version"
-            const val strikeThrough = "io.noties.markwon:ext-strikethrough:$version"
-            const val tables = "io.noties.markwon:ext-tables:$version"
-            const val latex = "io.noties.markwon:ext-latex:$version"
-        }
-    }
-
-    object MaterialDialogs {
-        private const val version = "3.3.0"
-        const val core = "com.afollestad.material-dialogs:core:$version"
-        const val input = "com.afollestad.material-dialogs:input:$version"
-        const val files = "com.afollestad.material-dialogs:files:$version"
-        const val colour = "com.afollestad.material-dialogs:colour:$version"
-        const val dateTime = "com.afollestad.material-dialogs:dateTime:$version"
-        const val lifecycle = "com.afollestad.material-dialogs:lifecycle:$version"
-        const val bottomsheets = "com.afollestad.material-dialogs:bottomsheets:$version"
-    }
-
     object Square {
 
         object LeakCanary {
@@ -371,7 +280,6 @@ object Libraries {
             private const val version = "2.9.0"
             const val retrofit = "com.squareup.retrofit2:retrofit:$version"
             const val gsonConverter =  "com.squareup.retrofit2:converter-gson:$version"
-            const val xmlConverter =  "com.squareup.retrofit2:converter-simplexml:$version"
         }
 
         object OkHttp {
@@ -379,15 +287,6 @@ object Libraries {
             const val okhttp = "com.squareup.okhttp3:okhttp:$version"
             const val logging = "com.squareup.okhttp3:logging-interceptor:$version"
             const val mockServer = "com.squareup.okhttp3:mockwebserver:$version"
-        }
-
-        object WorkFlow {
-            private const val version = "0.28.0"
-            const val coreJvm = "com.squareup.workflow:workflow-core-jvm:$version"
-            const val coreAndroid = "com.squareup.workflow:workflow-ui-core-android:$version"
-            const val modalAndroid = "com.squareup.workflow:workflow-ui-modal-android:$version"
-            const val backStackAndroid = "com.squareup.workflow:workflow-ui-backstack-android:$version"
-            const val testJvm = "com.squareup.workflow:workflow-testing-jvm:$version"
         }
     }
 

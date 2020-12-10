@@ -2,13 +2,6 @@ package io.wax911.trakt.buildSrc.plugin.strategy
 
 import io.wax911.trakt.buildSrc.Libraries
 import io.wax911.trakt.buildSrc.common.*
-import io.wax911.trakt.buildSrc.common.core
-import io.wax911.trakt.buildSrc.common.data
-import io.wax911.trakt.buildSrc.common.domain
-import io.wax911.trakt.buildSrc.common.navigation
-import io.wax911.trakt.buildSrc.plugin.extensions.baseExtension
-import io.wax911.trakt.buildSrc.plugin.extensions.containsLibraryPlugin
-import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
 internal class DependencyStrategy(
@@ -16,6 +9,7 @@ internal class DependencyStrategy(
 ) {
     private fun DependencyHandler.applyDefaultDependencies() {
         add("implementation", Libraries.JetBrains.Kotlin.stdlib)
+        add("implementation", Libraries.JetBrains.Kotlin.reflect)
         add("implementation", Libraries.timber)
 
         add("testImplementation", Libraries.junit)
