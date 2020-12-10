@@ -55,21 +55,11 @@ internal fun <T> String.loadClassOrNull(): Class<out T>? =
 
 internal fun <T : Fragment> String.loadFragmentOrNull(): T? =
     try {
-        this.loadClassOrNull<T>()?.newInstance()
+        loadClassOrNull<T>()?.newInstance()
     } catch (e: ClassNotFoundException) {
         Timber.tag("loadFragmentOrNull").e(e)
         null
     }
 
-/**
- * Builds an intent path for the navigation component target
- */
-fun NavigationComponent.forIntent(): Intent? {
-    return "$APPLICATION_PACKAGE_NAME.$packageName.$className".loadIntentOrNull()
-}
-
-/**
- * Build fragment class from intent
- */
-fun NavigationComponent.forFragment(): Class<out Fragment>? =
-    forIntent()?.component?.className?.loadClassOrNull()
+fun NavigationComponent.forFragment(): Class<out Fragment> =
+    feature.content()

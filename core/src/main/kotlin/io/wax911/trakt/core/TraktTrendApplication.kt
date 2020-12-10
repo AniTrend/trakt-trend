@@ -14,30 +14,11 @@ import timber.log.Timber
 /**
  * Core application
  */
-abstract class TraktTrendApplication : Application(), Configuration.Provider {
+abstract class TraktTrendApplication : Application() {
 
-    /** [Koin](https://insert-koin.io/docs/2.0/getting-started/)
-     *
-     * Initializes dependencies for the entire application, this function is automatically called
-     * in [onCreate] as the first call to assure all injections are available
-     */
-    protected abstract fun initializeDependencyInjection()
-
-    /**
-     * Timber logging tree depending on the build type we plant the appropriate tree
-     */
-    protected open fun plantLoggingTree() {
-        val analytics by inject<ISupportAnalytics>()
-        when (BuildConfig.DEBUG) {
-            true -> Timber.plant(Timber.DebugTree())
-            else -> Timber.plant(analytics as Timber.Tree)
-        }
-    }
 
     override fun onCreate() {
         super.onCreate()
-        initializeDependencyInjection()
-        plantLoggingTree()
         Coil.setImageLoader(object : ImageLoaderFactory {
             override fun newImageLoader(): ImageLoader {
                 return ImageLoader.Builder(applicationContext)
@@ -55,13 +36,5 @@ abstract class TraktTrendApplication : Application(), Configuration.Provider {
                     }.build()
             }
         })
-    }
-
-    /**
-     * @return The [Configuration] used to initialize WorkManager
-     */
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
-            .build()
     }
 }

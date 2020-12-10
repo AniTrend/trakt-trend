@@ -17,67 +17,29 @@
 
 package io.wax911.trakt.navigation
 
-import android.content.Context
 import android.os.Parcelable
 import io.wax911.trakt.navigation.contract.NavigationComponent
+import io.wax911.trakt.navigation.feature.INavigationFeature
 import kotlinx.android.parcel.Parcelize
+import org.koin.core.component.inject
 
-object NavigationTargets {
+object NavShow : NavigationComponent() {
+    override val feature: INavigationFeature by inject<Provider>()
 
-    object ShowScreen : NavigationComponent(
-        packageName = "discover.show.view.screen",
-        className = "ShowScreen"
-    ) {
-        const val PARAM = "ShowScreen:PARAM"
+    interface Provider : INavigationFeature
 
-        operator fun invoke(context: Context?, params: Params) {
-            navRouterIntent?.putExtra(PARAM, params)
-            super.invoke(context)
-        }
+    @Parcelize data class Params(
+        val showId: Int
+    ) : Parcelable
+}
 
-        @Parcelize
-        data class Params(
-            val showId: Int
-        ) : Parcelable
-    }
+object NavMovie : NavigationComponent() {
 
-    object ShowContentRoot : NavigationComponent(
-        packageName = "discover.show.view.content",
-        className = "ShowListRootContent"
-    )
+    override val feature: INavigationFeature by inject<Provider>()
 
-    object ShowListContent : NavigationComponent(
-        packageName = "discover.show.view.content",
-        className = "ShowListContent"
-    ) {
-        const val PARAM = "ShowListContent:PARAM"
-    }
+    interface Provider : INavigationFeature
 
-    object ShowDetailContent : NavigationComponent(
-        packageName = "discover.show.view.content",
-        className = "ShowDetailContent"
-    ) {
-        const val PARAM = "ShowDetailContent:PARAM"
-    }
-
-    object MovieScreen : NavigationComponent(
-        packageName = "discover.movie.view.screen",
-        className = "MovieScreen"
-    ) {
-        const val PARAM = "MovieScreen:PARAM"
-    }
-
-    object MovieListContent : NavigationComponent(
-        packageName = "discover.movie.view.content",
-        className = "MovieListContent"
-    ) {
-        const val PARAM = "MovieListContent:PARAM"
-    }
-
-    object MovieDetailContent : NavigationComponent(
-        packageName = "discover.movie.view.content",
-        className = "MovieDetailContent"
-    ) {
-        const val PARAM = "MovieDetailContent:PARAM"
-    }
+    @Parcelize data class Params(
+        val movieId: Int
+    ) : Parcelable
 }

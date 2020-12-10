@@ -8,6 +8,7 @@ import co.anitrend.arch.core.model.IStateLayoutConfig
 import co.anitrend.arch.recycler.action.contract.ISupportSelectionMode
 import co.anitrend.arch.recycler.adapter.SupportPagedListAdapter
 import co.anitrend.arch.recycler.model.contract.IRecyclerItem
+import co.anitrend.arch.recycler.shared.SupportFooterLoadingItem
 import co.anitrend.arch.theme.animator.ScaleAnimator
 import co.anitrend.arch.theme.animator.contract.AbstractAnimator
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
@@ -16,14 +17,12 @@ import io.wax911.trakt.shared.discover.model.MediaItem
 class MediaAdapter(
     override val resources: Resources,
     override val stateConfiguration: IStateLayoutConfig,
+    override var supportAction: ISupportSelectionMode<Long>? = null,
     override var customSupportAnimator: AbstractAnimator? = ScaleAnimator(),
-    override val mapper: (ISharedMediaWithImage?) -> IRecyclerItem = { MediaItem(it) }
+    override val mapper: (ISharedMediaWithImage?) -> IRecyclerItem = {
+        if (it != null) MediaItem(it) else SupportFooterLoadingItem(stateConfiguration)
+    }
 ) : SupportPagedListAdapter<ISharedMediaWithImage>(MediaItem.DIFFER) {
-
-    /**
-     * Assigned if the current adapter supports needs to supports action mode
-     */
-    override var supportAction: ISupportSelectionMode<Long>? = null
 
     /**
      * Used to get stable ids for [androidx.recyclerview.widget.RecyclerView.Adapter] but only if

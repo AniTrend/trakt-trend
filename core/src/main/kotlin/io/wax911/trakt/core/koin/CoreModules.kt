@@ -54,6 +54,6 @@ private val presenterModule = module {
     }
 }
 
-val coreModules = listOf(
+internal val coreModules = listOf(
     coreModule, coilModules, presenterModule
 ) + dataModules

@@ -1,23 +1,22 @@
 package io.wax911.trakt.discover.show.view.content
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import co.anitrend.arch.domain.entities.NetworkState
 import co.anitrend.arch.extension.ext.argument
-import co.anitrend.arch.extension.ext.attachComponent
-import co.anitrend.arch.extension.ext.detachComponent
 import co.anitrend.arch.recycler.common.DefaultClickableItem
-import co.anitrend.arch.ui.fragment.list.SupportFragmentList
 import co.anitrend.arch.ui.view.widget.model.StateLayoutConfig
+import io.wax911.trakt.core.view.fragment.TraktFragmentList
 import io.wax911.trakt.discover.show.R
-import io.wax911.trakt.discover.show.di.dynamicModuleHelper
 import io.wax911.trakt.discover.show.viewmodel.ShowViewModel
 import io.wax911.trakt.domain.entities.shared.contract.ISharedMediaWithImage
 import io.wax911.trakt.domain.models.MediaPayload
-import io.wax911.trakt.navigation.NavigationTargets
+import io.wax911.trakt.navigation.NavShow
 import io.wax911.trakt.shared.discover.adapter.MediaAdapter
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterIsInstance
@@ -26,11 +25,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ShowListContent(
     override val defaultSpanSize: Int = R.integer.grid_list_x3
-) : SupportFragmentList<ISharedMediaWithImage>() {
+) : TraktFragmentList<ISharedMediaWithImage>() {
 
-    private val payload by argument<MediaPayload>(
-        NavigationTargets.ShowListContent.PARAM
-    )
+    private val payload by argument<MediaPayload>(NavShow.bundleKey)
 
     private val viewModel by viewModel<ShowViewModel>()
 
@@ -55,17 +52,13 @@ class ShowListContent(
      */
     override fun initializeComponents(savedInstanceState: Bundle?) {
         super.initializeComponents(savedInstanceState)
-        attachComponent(dynamicModuleHelper)
         lifecycleScope.launchWhenResumed {
             supportViewAdapter.clickableStateFlow.debounce(16)
                 .filterIsInstance<DefaultClickableItem<ISharedMediaWithImage>>()
                 .collect {
                     val model = it.data
                     val context = it.view.context
-                    val params = NavigationTargets.ShowScreen.Params(
-                        model?.media?.id ?: 0
-                    )
-                    NavigationTargets.ShowScreen(context, params)
+                    NavShow(context, NavShow.Params(model?.media?.id ?: 0))
                 }
         }
     }
@@ -110,19 +103,4 @@ class ShowListContent(
      * Proxy for a view model state if one exists
      */
     override fun viewModelState() = viewModel.modelState
-
-    /**
-     * Called when the view previously created by [onCreateView] has
-     * been detached from the fragment. The next time the fragment needs
-     * to be displayed, a new view will be created.  This is called
-     * after [onStop] and before [onDestroy].
-     *
-     * It is called *regardless* of whether [onCreateView] returned a
-     * non-null view. Internally it is called after the view's state has
-     * been saved but before it has been removed from its parent.
-     */
-    override fun onDestroyView() {
-        super.onDestroyView()
-        detachComponent(dynamicModuleHelper)
-    }
 }

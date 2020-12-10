@@ -1,11 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
+    xmlns:tools="http://schemas.android.com/tools"
     package="io.wax911.trakt.discover.show">
 
     <application>
-        <activity android:name=".view.screen.ShowScreen"
-            android:theme="@style/AppTheme.TransparentWindow"
-            />
+        <activity android:name=".view.screen.ShowScreen" />
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data  android:name="io.wax911.trakt.discover.show.initializer.FeatureInitializer"
+                android:value="androidx.startup" />
+        </provider>
     </application>
 </manifest>
 

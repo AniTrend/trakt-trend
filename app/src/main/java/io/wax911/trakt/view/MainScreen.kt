@@ -19,7 +19,8 @@ import io.wax911.trakt.core.model.FragmentItem
 import io.wax911.trakt.core.view.activity.TraktTrendActivity
 import io.wax911.trakt.domain.models.MediaPayload
 import io.wax911.trakt.domain.usecases.MediaRequestType
-import io.wax911.trakt.navigation.NavigationTargets
+import io.wax911.trakt.navigation.NavMovie
+import io.wax911.trakt.navigation.NavShow
 import io.wax911.trakt.navigation.extensions.forFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
@@ -122,28 +123,21 @@ class MainScreen : TraktTrendActivity(), NavigationView.OnNavigationItemSelected
             R.id.nav_contact -> Toast.makeText(this@MainScreen, "Contact", Toast.LENGTH_SHORT).show()
             R.id.nav_popular_series -> {
                 selectedTitle = R.string.nav_shows
-                fragmentItem = NavigationTargets.ShowListContent
-                    .forFragment()?.let {
-                        FragmentItem(
-                            parameter = MediaPayload(
-                                MediaRequestType.POPULAR
-                            ).toBundle(NavigationTargets.ShowListContent.PARAM),
-                            fragment = it
-                        )
-                    }
+                fragmentItem = FragmentItem(
+                    parameter = MediaPayload(
+                        MediaRequestType.POPULAR
+                    ).toBundle(NavShow.bundleKey),
+                    fragment = NavShow.forFragment()
+                )
             }
             R.id.nav_popular_movies -> {
                 selectedTitle = R.string.nav_movies
-                fragmentItem = NavigationTargets
-                    .MovieListContent
-                    .forFragment()?.let {
-                    FragmentItem(
-                        parameter = MediaPayload(
-                            MediaRequestType.POPULAR
-                        ).toBundle(NavigationTargets.MovieListContent.PARAM),
-                        fragment = it
-                    )
-                }
+                fragmentItem = FragmentItem(
+                    parameter = MediaPayload(
+                        MediaRequestType.POPULAR
+                    ).toBundle(NavMovie.bundleKey),
+                    fragment = NavMovie.forFragment()
+                )
             }
         }
 

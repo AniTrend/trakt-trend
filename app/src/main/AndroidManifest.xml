@@ -45,6 +45,21 @@
         </provider>
 
         <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data  android:name="io.wax911.trakt.initializer.AppInitializer"
+                android:value="androidx.startup" />
+            <meta-data  android:name="io.wax911.trakt.initializer.WorkerInitializer"
+                android:value="androidx.startup" />
+        </provider>
+
+        <!--
+        Disable default work manager initializer
+        https://developer.android.com/topic/libraries/architecture/workmanager/advanced/custom-configuration
+        -->
+        <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
             android:authorities="${applicationId}.workmanager-init"
             tools:node="remove"
