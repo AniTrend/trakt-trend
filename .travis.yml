@@ -33,7 +33,7 @@ android:
     # if you need to run emulator(s) during your tests
     - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
     - sys-img-x86-android-$ANDROID_API_LEVEL
-    - sys-img-armeabi-v7a-android-17
+    - sys-img-armeabi-v7a-android-21
 
     # addons
     - addon-google_apis-google-$ANDROID_API_LEVEL
@@ -59,6 +59,7 @@ before_script:
   - ./scripts/configuration.sh
   
 script:
+    - ./gradlew app:dependencies 
     - ./gradlew test
 
 before_install:
