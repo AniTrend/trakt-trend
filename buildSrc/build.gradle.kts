@@ -17,7 +17,7 @@ kotlinDslPluginOptions {
     experimentalWarning.set(false)
 }
 
-val kotlinVersion = "1.4.31"
+val kotlinVersion = "1.4.32"
 val buildToolsVersion = "4.1.3"
 val manesVersion = "0.33.0"
 
