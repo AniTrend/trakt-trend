@@ -19,7 +19,7 @@ kotlinDslPluginOptions {
 
 val kotlinVersion = "1.4.32"
 val buildToolsVersion = "4.1.3"
-val manesVersion = "0.33.0"
+val manesVersion = "0.36.0"
 
 dependencies {
     /* Depend on the android gradle plugin, since we want to access it in our plugin */
